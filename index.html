@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Facts Generator – RandomFactsHub</title>
+  <meta name="description" content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
+  <link rel="canonical" href="https://randomfactshub.com/">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://randomfactshub.com/">
+  <meta property="og:site_name" content="RandomFactsHub">
+  <meta property="og:title" content="Random Facts Generator – RandomFactsHub">
+  <meta property="og:description" content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Random Facts Generator – RandomFactsHub">
+  <meta name="twitter:description" content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
+
+  <!-- Google Fonts: Playfair Display for elegant serif titles & Plus Jakarta Sans for UI/extract -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "RandomFactsHub",
+    "url": "https://randomfactshub.com/",
+    "description": "Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub."
+  }
+  </script>
+
+  <style>
+    /* Design Tokens */
+    :root {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: rgba(226, 232, 240, 0.8);
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --accent: #4f46e5;
+      --accent-hover: #4338ca;
+      --accent-light: #eef2ff;
+      --accent-light-border: #c7d2fe;
+      --focus-ring: rgba(79, 70, 229, 0.4);
+      --shadow: 0 16px 36px -8px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.04);
+      --skeleton-base: #e2e8f0;
+      --skeleton-shine: #f1f5f9;
+      --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0f19;
+        --card-bg: #111827;
+        --card-border: rgba(255, 255, 255, 0.08);
+        --text-primary: #f8fafc;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --accent: #6366f1;
+        --accent-hover: #818cf8;
+        --accent-light: rgba(99, 102, 241, 0.15);
+        --accent-light-border: rgba(99, 102, 241, 0.3);
+        --focus-ring: rgba(99, 102, 241, 0.5);
+        --shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255, 255, 255, 0.05);
+        --skeleton-base: #1e293b;
+        --skeleton-shine: #334155;
+      }
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2.5rem 1.25rem 2rem;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* Accessibility Focus Styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* Header */
+    .app-header {
+      margin-bottom: 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .app-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .app-title-badge {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* Topic Selector Control */
+    .topic-control {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .topic-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .topic-select-wrapper {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .topic-select {
+      width: 100%;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-color: var(--card-bg);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.65rem 2.25rem 0.65rem 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .topic-select:hover:not(:disabled) {
+      border-color: var(--accent);
+    }
+
+    .topic-select:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .topic-select:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .topic-select optgroup {
+      font-weight: 700;
+      color: var(--text-primary);
+      background: var(--card-bg);
+    }
+
+    .topic-select option {
+      font-weight: 400;
+      color: var(--text-primary);
+      background: var(--card-bg);
+    }
+
+    .select-chevron {
+      position: absolute;
+      right: 0.85rem;
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+      pointer-events: none;
+      transition: transform 0.2s ease;
+    }
+
+    /* Main Container */
+    .app-main {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    /* Primary Action Area */
+    .action-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      width: 100%;
+    }
+
+    .primary-btn {
+      position: relative;
+      background: var(--accent);
+      color: #ffffff;
+      font-family: var(--font-sans);
+      font-size: 1.125rem;
+      font-weight: 600;
+      padding: 0.95rem 2.25rem;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.65rem;
+      box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
+      transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+                  background-color 0.18s ease,
+                  opacity 0.18s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .primary-btn:hover:not(:disabled) {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px 0 rgba(79, 70, 229, 0.45);
+    }
+
+    .primary-btn:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px 0 rgba(79, 70, 229, 0.3);
+    }
+
+    .primary-btn:disabled {
+      opacity: 0.75;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-icon {
+      width: 18px;
+      height: 18px;
+      transition: transform 0.25s ease;
+    }
+
+    .primary-btn:hover:not(:disabled) .btn-icon {
+      transform: rotate(20deg) scale(1.1);
+    }
+
+    .btn-spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .primary-btn.is-loading .btn-icon {
+      display: none;
+    }
+
+    .primary-btn.is-loading .btn-spinner {
+      display: block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .keyboard-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    .keyboard-hint kbd {
+      display: inline-block;
+      padding: 0.15rem 0.4rem;
+      font-family: inherit;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .keyboard-hint {
+        display: none;
+      }
+    }
+
+    /* Fact Area Container */
+    .fact-area {
+      width: 100%;
+      min-height: 280px;
+      position: relative;
+    }
+
+    /* Result Card */
+    .fact-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      overflow: hidden;
+      display: none;
+    }
+
+    .fact-card.is-visible {
+      display: block;
+    }
+
+    .fact-card.fact-enter {
+      animation: factSlideFade 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes factSlideFade {
+      0% {
+        opacity: 0;
+        transform: translateY(14px) scale(0.99);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Card Thumbnail */
+    .card-media-wrapper {
+      width: 100%;
+      max-height: 340px;
+      overflow: hidden;
+      background-color: var(--skeleton-base);
+      display: none;
+      position: relative;
+    }
+
+    .card-media-wrapper.has-image {
+      display: block;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .fact-card:hover .card-img {
+      transform: scale(1.02);
+    }
+
+    /* Card Content */
+    .card-content {
+      padding: 2.25rem 2.5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .card-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .fact-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background-color: var(--accent-light);
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      border: 1px solid var(--accent-light-border);
+    }
+
+    .copy-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0.35rem 0.75rem;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-light);
+      color: var(--accent);
+      border-color: var(--accent-light-border);
+    }
+
+    .copy-btn.copied {
+      background: #ecfdf5;
+      color: #059669;
+      border-color: #a7f3d0;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .copy-btn.copied {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border-color: rgba(16, 185, 129, 0.3);
+      }
+    }
+
+    .copy-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Typography */
+    .card-header-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .fact-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.75rem, 4vw, 2.3rem);
+      font-weight: 700;
+      line-height: 1.22;
+      color: var(--text-primary);
+      letter-spacing: -0.015em;
+    }
+
+    .fact-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .fact-desc.is-visible {
+      display: block;
+    }
+
+    .fact-extract {
+      font-size: 1.125rem; /* 18px */
+      line-height: 1.7;
+      color: var(--text-secondary);
+      max-width: 650px;
+    }
+
+    /* Read More Link */
+    .card-footer-link {
+      margin-top: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.15s ease, gap 0.2s ease;
+    }
+
+    .card-footer-link:hover {
+      color: var(--accent-hover);
+      gap: 0.65rem;
+    }
+
+    .link-arrow {
+      width: 15px;
+      height: 15px;
+      transition: transform 0.2s ease;
+    }
+
+    .card-footer-link:hover .link-arrow {
+      transform: translateX(2px);
+    }
+
+    /* Skeleton Shimmer Screen */
+    .skeleton-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      overflow: hidden;
+      display: none;
+    }
+
+    .skeleton-card.is-visible {
+      display: block;
+    }
+
+    .shimmer {
+      background: linear-gradient(
+        90deg,
+        var(--skeleton-base) 0%,
+        var(--skeleton-shine) 50%,
+        var(--skeleton-base) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmerWave 1.4s infinite linear;
+      border-radius: 6px;
+    }
+
+    @keyframes shimmerWave {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-image {
+      width: 100%;
+      height: 220px;
+      border-radius: 0;
+    }
+
+    .skeleton-body {
+      padding: 2.25rem 2.5rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    .skeleton-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .skeleton-pill {
+      width: 90px;
+      height: 22px;
+      border-radius: 9999px;
+    }
+
+    .skeleton-btn {
+      width: 80px;
+      height: 28px;
+      border-radius: 8px;
+    }
+
+    .skeleton-title-1 {
+      width: 82%;
+      height: 32px;
+    }
+
+    .skeleton-title-2 {
+      width: 50%;
+      height: 26px;
+    }
+
+    .skeleton-desc {
+      width: 40%;
+      height: 16px;
+      margin-top: -0.3rem;
+    }
+
+    .skeleton-line {
+      width: 100%;
+      height: 16px;
+    }
+
+    .skeleton-line.mid { width: 92%; }
+    .skeleton-line.short { width: 68%; }
+
+    .skeleton-link {
+      width: 170px;
+      height: 20px;
+      margin-top: 0.5rem;
+    }
+
+    /* Error State Card */
+    .error-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 3rem 2rem;
+      text-align: center;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .error-card.is-visible {
+      display: flex;
+    }
+
+    .error-icon {
+      width: 48px;
+      height: 48px;
+      color: #ef4444;
+      background: #fee2e2;
+      border-radius: 50%;
+      padding: 10px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .error-icon {
+        background: rgba(239, 68, 68, 0.15);
+      }
+    }
+
+    .error-message {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .retry-btn {
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.65rem 1.6rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background-color 0.18s ease, transform 0.18s ease;
+    }
+
+    .retry-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    /* SEO Informational Text Block */
+    .seo-intro {
+      width: 100%;
+      text-align: center;
+      padding: 0 0.5rem;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .seo-intro strong {
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .app-footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .app-footer a {
+      color: var(--accent);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .app-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .app-footer .disclaimer {
+      opacity: 0.8;
+      font-size: 0.75rem;
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 640px) {
+      body {
+        padding: 1.75rem 0.75rem 1.5rem;
+      }
+
+      .topic-control {
+        max-width: 100%;
+      }
+
+      .card-content,
+      .skeleton-body {
+        padding: 1.5rem 1.25rem 1.75rem;
+        gap: 1rem;
+      }
+
+      .card-img {
+        height: 240px;
+      }
+
+      .fact-title {
+        font-size: 1.65rem;
+      }
+
+      .fact-extract {
+        font-size: 1.05rem;
+        line-height: 1.65;
+      }
+
+      .primary-btn {
+        width: 100%;
+        max-width: 320px;
+        font-size: 1.05rem;
+        padding: 0.85rem 1.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Minimal Semantic Header with Topic Selector -->
+  <header class="app-header">
+    <h1 class="app-title">
+      <span class="app-title-badge" aria-hidden="true"></span>
+      RandomFactsHub
+    </h1>
+
+    <div class="topic-control">
+      <label for="topic-select" class="topic-label">Choose a topic</label>
+      <div class="topic-select-wrapper">
+        <select id="topic-select" class="topic-select" aria-label="Choose a topic">
+          <option value="">🎲 Any topic (Random)</option>
+        </select>
+        <svg class="select-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="app-main">
+    <!-- Big Action Button -->
+    <div class="action-container">
+      <button id="next-fact-btn" class="primary-btn" type="button" aria-label="Show me a fact">
+        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+        </svg>
+        <span class="btn-spinner" aria-hidden="true"></span>
+        <span id="btn-text">Show me a fact</span>
+      </button>
+      <p class="keyboard-hint">Press <kbd>Space</kbd> or <kbd>→</kbd> for next fact</p>
+    </div>
+
+    <!-- Live Fact Area -->
+    <div class="fact-area" aria-live="polite">
+      
+      <!-- Skeleton Shimmer Placeholder -->
+      <div id="skeleton-card" class="skeleton-card" aria-hidden="true">
+        <div class="shimmer skeleton-image"></div>
+        <div class="skeleton-body">
+          <div class="skeleton-topbar">
+            <div class="shimmer skeleton-pill"></div>
+            <div class="shimmer skeleton-btn"></div>
+          </div>
+          <div class="shimmer skeleton-title-1"></div>
+          <div class="shimmer skeleton-title-2"></div>
+          <div class="shimmer skeleton-desc"></div>
+          <div class="shimmer skeleton-line"></div>
+          <div class="shimmer skeleton-line mid"></div>
+          <div class="shimmer skeleton-line short"></div>
+          <div class="shimmer skeleton-link"></div>
+        </div>
+      </div>
+
+      <!-- Result Card -->
+      <article id="fact-card" class="fact-card">
+        <!-- Thumbnail media -->
+        <div id="card-media-wrapper" class="card-media-wrapper">
+          <img id="fact-img" class="card-img" src="" alt="" loading="lazy">
+        </div>
+
+        <div class="card-content">
+          <div class="card-topbar">
+            <span id="fact-tag" class="fact-tag">Wikipedia Fact</span>
+            <button id="copy-btn" class="copy-btn" type="button" aria-label="Copy link to this fact" title="Copy link to this fact">
+              <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span id="copy-text">Copy link</span>
+            </button>
+          </div>
+
+          <div class="card-header-text">
+            <h2 id="fact-title" class="fact-title"></h2>
+            <p id="fact-desc" class="fact-desc"></p>
+          </div>
+
+          <p id="fact-extract" class="fact-extract"></p>
+
+          <div>
+            <a id="fact-wiki-link" class="card-footer-link" href="#" target="_blank" rel="noopener">
+              <span>Read more on Wikipedia</span>
+              <svg class="link-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Error State Card -->
+      <div id="error-card" class="error-card" role="alert">
+        <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <p id="error-message" class="error-message">Couldn't load a fact. Try again.</p>
+        <button id="retry-btn" class="retry-btn" type="button">Try again</button>
+      </div>
+
+    </div>
+
+    <!-- Visible Subtle SEO Text Block -->
+    <section class="seo-intro" aria-label="About RandomFactsHub">
+      <p>
+        RandomFactsHub is your daily gateway to discover unexpected <strong>random facts</strong>, explore curated <strong>facts by topic</strong>, and learn captivating <strong>interesting facts</strong> straight from Wikipedia. Choose a topic or wander freely through unexpected rabbit holes one click at a time.
+      </p>
+    </section>
+  </main>
+
+  <!-- Semantic Footer with Mandatory Attribution and Disclaimers -->
+  <footer class="app-footer">
+    <p>
+      Content from <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a>, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+    </p>
+    <p class="disclaimer">RandomFactsHub is not affiliated with Wikipedia or the Wikimedia Foundation.</p>
+  </footer>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // Master Topic List: { group, label, category }
+      const TOPICS = [
+        // Science
+        { group: 'Science', label: 'Physics', category: 'Physics' },
+        { group: 'Science', label: 'Chemistry', category: 'Chemistry' },
+        { group: 'Science', label: 'Biology', category: 'Biology' },
+        { group: 'Science', label: 'Astronomy', category: 'Astronomy' },
+        { group: 'Science', label: 'Space Exploration', category: 'Space exploration' },
+        { group: 'Science', label: 'Earth Science', category: 'Earth sciences' },
+        { group: 'Science', label: 'Geology', category: 'Geology' },
+        { group: 'Science', label: 'Oceanography', category: 'Oceanography' },
+        { group: 'Science', label: 'Genetics', category: 'Genetics' },
+        { group: 'Science', label: 'Neuroscience', category: 'Neuroscience' },
+        { group: 'Science', label: 'Environment', category: 'Environment' },
+        { group: 'Science', label: 'Climate Change', category: 'Climate change' },
+        { group: 'Science', label: 'Mathematics', category: 'Mathematics' },
+        { group: 'Science', label: 'Statistics', category: 'Statistics' },
+
+        // Technology
+        { group: 'Technology', label: 'Technology', category: 'Technology' },
+        { group: 'Technology', label: 'Computer Science', category: 'Computer science' },
+        { group: 'Technology', label: 'Internet', category: 'Internet' },
+        { group: 'Technology', label: 'Artificial Intelligence', category: 'Artificial intelligence' },
+        { group: 'Technology', label: 'Programming', category: 'Programming languages' },
+        { group: 'Technology', label: 'Engineering', category: 'Engineering' },
+        { group: 'Technology', label: 'Inventions', category: 'Inventions' },
+        { group: 'Technology', label: 'Robotics', category: 'Robotics' },
+        { group: 'Technology', label: 'Electronics', category: 'Electronics' },
+        { group: 'Technology', label: 'Video Games', category: 'Video games' },
+        { group: 'Technology', label: 'Cybersecurity', category: 'Computer security' },
+
+        // Nature
+        { group: 'Nature', label: 'Nature', category: 'Nature' },
+        { group: 'Nature', label: 'Animals', category: 'Animals' },
+        { group: 'Nature', label: 'Birds', category: 'Birds' },
+        { group: 'Nature', label: 'Marine Life', category: 'Marine life' },
+        { group: 'Nature', label: 'Insects', category: 'Insects' },
+        { group: 'Nature', label: 'Dinosaurs', category: 'Dinosaurs' },
+        { group: 'Nature', label: 'Plants', category: 'Plants' },
+        { group: 'Nature', label: 'Natural Disasters', category: 'Natural disasters' },
+        { group: 'Nature', label: 'Weather', category: 'Weather' },
+
+        // History
+        { group: 'History', label: 'History', category: 'History' },
+        { group: 'History', label: 'Ancient History', category: 'Ancient history' },
+        { group: 'History', label: 'Medieval History', category: 'Middle Ages' },
+        { group: 'History', label: 'Modern History', category: 'Modern history' },
+        { group: 'History', label: 'World War I', category: 'World War I' },
+        { group: 'History', label: 'World War II', category: 'World War II' },
+        { group: 'History', label: 'Military', category: 'Military history' },
+        { group: 'History', label: 'Ancient Civilizations', category: 'Ancient civilizations' },
+        { group: 'History', label: 'Archaeology', category: 'Archaeology' },
+        { group: 'History', label: 'Empires', category: 'Empires' },
+
+        // Geography & Places
+        { group: 'Geography & Places', label: 'Geography', category: 'Geography' },
+        { group: 'Geography & Places', label: 'Countries', category: 'Countries' },
+        { group: 'Geography & Places', label: 'Cities', category: 'Cities' },
+        { group: 'Geography & Places', label: 'Islands', category: 'Islands' },
+        { group: 'Geography & Places', label: 'Mountains', category: 'Mountains' },
+        { group: 'Geography & Places', label: 'Rivers', category: 'Rivers' },
+        { group: 'Geography & Places', label: 'Landmarks', category: 'Landmarks' },
+        { group: 'Geography & Places', label: 'Travel & Tourism', category: 'Tourism' },
+
+        // India
+        { group: 'India', label: 'India', category: 'India' },
+        { group: 'India', label: 'History of India', category: 'History of India' },
+        { group: 'India', label: 'Culture of India', category: 'Culture of India' },
+        { group: 'India', label: 'Indian Cinema', category: 'Cinema of India' },
+        { group: 'India', label: 'Indian Cuisine', category: 'Indian cuisine' },
+
+        // People
+        { group: 'People', label: 'Scientists', category: 'Scientists' },
+        { group: 'People', label: 'Inventors', category: 'Inventors' },
+        { group: 'People', label: 'Explorers', category: 'Explorers' },
+        { group: 'People', label: 'Writers', category: 'Writers' },
+        { group: 'People', label: 'Musicians', category: 'Musicians' },
+        { group: 'People', label: 'Artists', category: 'Artists' },
+        { group: 'People', label: 'Athletes', category: 'Sportspeople' },
+        { group: 'People', label: 'Leaders', category: 'Political leaders' },
+        { group: 'People', label: 'Philosophers', category: 'Philosophers' },
+
+        // Arts & Culture
+        { group: 'Arts & Culture', label: 'Art', category: 'Art' },
+        { group: 'Arts & Culture', label: 'Architecture', category: 'Architecture' },
+        { group: 'Arts & Culture', label: 'Music', category: 'Music' },
+        { group: 'Arts & Culture', label: 'Movies', category: 'Films' },
+        { group: 'Arts & Culture', label: 'Television', category: 'Television' },
+        { group: 'Arts & Culture', label: 'Literature', category: 'Literature' },
+        { group: 'Arts & Culture', label: 'Theatre', category: 'Theatre' },
+        { group: 'Arts & Culture', label: 'Photography', category: 'Photography' },
+        { group: 'Arts & Culture', label: 'Fashion', category: 'Fashion' },
+        { group: 'Arts & Culture', label: 'Mythology', category: 'Mythology' },
+        { group: 'Arts & Culture', label: 'Folklore', category: 'Folklore' },
+        { group: 'Arts & Culture', label: 'Festivals', category: 'Festivals' },
+
+        // Society & Life
+        { group: 'Society & Life', label: 'Health', category: 'Health' },
+        { group: 'Society & Life', label: 'Medicine', category: 'Medicine' },
+        { group: 'Society & Life', label: 'Psychology', category: 'Psychology' },
+        { group: 'Society & Life', label: 'Food & Drink', category: 'Food and drink' },
+        { group: 'Society & Life', label: 'Sports', category: 'Sports' },
+        { group: 'Society & Life', label: 'Olympics', category: 'Olympic Games' },
+        { group: 'Society & Life', label: 'Business', category: 'Business' },
+        { group: 'Society & Life', label: 'Economics', category: 'Economics' },
+        { group: 'Society & Life', label: 'Law', category: 'Law' },
+        { group: 'Society & Life', label: 'Politics', category: 'Politics' },
+        { group: 'Society & Life', label: 'Education', category: 'Education' },
+        { group: 'Society & Life', label: 'Languages', category: 'Languages' },
+        { group: 'Society & Life', label: 'Transport', category: 'Transport' },
+        { group: 'Society & Life', label: 'Crime', category: 'Crime' },
+        { group: 'Society & Life', label: 'Religion', category: 'Religion' },
+        { group: 'Society & Life', label: 'Philosophy', category: 'Philosophy' },
+        { group: 'Society & Life', label: 'Culture', category: 'Culture' }
+      ];
+
+      // DOM Elements
+      const topicSelect = document.getElementById('topic-select');
+      const nextBtn = document.getElementById('next-fact-btn');
+      const retryBtn = document.getElementById('retry-btn');
+      const copyBtn = document.getElementById('copy-btn');
+      const copyText = document.getElementById('copy-text');
+      const skeletonCard = document.getElementById('skeleton-card');
+      const factCard = document.getElementById('fact-card');
+      const errorCard = document.getElementById('error-card');
+      const errorMessage = document.getElementById('error-message');
+      const cardMediaWrapper = document.getElementById('card-media-wrapper');
+      const factImg = document.getElementById('fact-img');
+      const factTag = document.getElementById('fact-tag');
+      const factTitle = document.getElementById('fact-title');
+      const factDesc = document.getElementById('fact-desc');
+      const factExtract = document.getElementById('fact-extract');
+      const factWikiLink = document.getElementById('fact-wiki-link');
+
+      let currentFactTitle = '';
+      let currentTopicLabel = '';
+      let isLoading = false;
+      let copyTimeoutId = null;
+
+      // API Endpoints
+      const RANDOM_API_URL = 'https://en.wikipedia.org/api/rest_v1/page/random/summary';
+      const SPECIFIC_API_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
+
+      // Populate Topic Dropdown with Optgroups
+      function buildTopicDropdown() {
+        const groups = {};
+        TOPICS.forEach(topic => {
+          if (!groups[topic.group]) {
+            groups[topic.group] = [];
+          }
+          groups[topic.group].push(topic);
+        });
+
+        Object.keys(groups).forEach(groupName => {
+          const optgroup = document.createElement('optgroup');
+          optgroup.label = groupName;
+          groups[groupName].forEach(topic => {
+            const option = document.createElement('option');
+            option.value = topic.label;
+            option.textContent = topic.label;
+            optgroup.appendChild(option);
+          });
+          topicSelect.appendChild(optgroup);
+        });
+      }
+
+      function getSelectedTopicObject() {
+        const val = topicSelect.value;
+        if (!val) return null;
+        return TOPICS.find(t => t.label.toLowerCase() === val.toLowerCase()) || null;
+      }
+
+      function saveTopicPreference(label) {
+        try {
+          if (label) {
+            localStorage.setItem('rfh_selected_topic', label);
+          } else {
+            localStorage.removeItem('rfh_selected_topic');
+          }
+        } catch (e) {
+          // Graceful handling for disabled storage
+        }
+      }
+
+      function getTopicPreference() {
+        try {
+          return localStorage.getItem('rfh_selected_topic') || '';
+        } catch (e) {
+          return '';
+        }
+      }
+
+      function setLoadingState(loading) {
+        isLoading = loading;
+        nextBtn.disabled = loading;
+        topicSelect.disabled = loading;
+
+        if (loading) {
+          nextBtn.classList.add('is-loading');
+          errorCard.classList.remove('is-visible');
+          factCard.classList.remove('is-visible');
+          skeletonCard.classList.add('is-visible');
+        } else {
+          nextBtn.classList.remove('is-loading');
+          skeletonCard.classList.remove('is-visible');
+        }
+      }
+
+      function showErrorState(msg) {
+        setLoadingState(false);
+        factCard.classList.remove('is-visible');
+        skeletonCard.classList.remove('is-visible');
+        errorMessage.textContent = msg || "Couldn't load a fact. Try again.";
+        errorCard.classList.add('is-visible');
+      }
+
+      function renderFact(data, topicLabel) {
+        currentFactTitle = data.title || '';
+        currentTopicLabel = topicLabel || '';
+
+        // Safe text assignment using textContent (prevents XSS)
+        factTitle.textContent = data.title || 'Untitled Fact';
+
+        // Update topic tag pill on card
+        if (currentTopicLabel) {
+          factTag.textContent = currentTopicLabel;
+        } else {
+          factTag.textContent = 'Wikipedia Fact';
+        }
+
+        if (data.description && data.description.trim()) {
+          factDesc.textContent = data.description.trim();
+          factDesc.classList.add('is-visible');
+        } else {
+          factDesc.textContent = '';
+          factDesc.classList.remove('is-visible');
+        }
+
+        factExtract.textContent = data.extract || 'No summary available for this topic.';
+
+        // Handle Thumbnail
+        if (data.thumbnail && data.thumbnail.source) {
+          factImg.src = data.thumbnail.source;
+          factImg.alt = data.title ? `${data.title} thumbnail` : 'Fact illustration';
+          cardMediaWrapper.classList.add('has-image');
+        } else {
+          factImg.src = '';
+          factImg.alt = '';
+          cardMediaWrapper.classList.remove('has-image');
+        }
+
+        // Handle Image Load Errors gracefully
+        factImg.onerror = function () {
+          cardMediaWrapper.classList.remove('has-image');
+        };
+
+        // Handle Desktop Wikipedia Link
+        const wikiUrl = (data.content_urls && data.content_urls.desktop && data.content_urls.desktop.page)
+          ? data.content_urls.desktop.page
+          : `https://en.wikipedia.org/wiki/${encodeURIComponent(data.title || '')}`;
+        factWikiLink.href = wikiUrl;
+
+        // Update Document Title dynamically
+        document.title = `${factTitle.textContent} – RandomFactsHub`;
+
+        // Update URL via history.replaceState
+        try {
+          const newUrl = new URL(window.location.origin + window.location.pathname);
+          if (currentTopicLabel) {
+            newUrl.searchParams.set('topic', currentTopicLabel);
+          }
+          newUrl.searchParams.set('fact', currentFactTitle);
+          window.history.replaceState({ topic: currentTopicLabel, fact: currentFactTitle }, '', newUrl.toString());
+        } catch (e) {
+          // Ignore URL update errors in restricted environments
+        }
+
+        // Show card with smooth animation
+        errorCard.classList.remove('is-visible');
+        skeletonCard.classList.remove('is-visible');
+        factCard.classList.remove('fact-enter');
+        void factCard.offsetWidth; // Force CSS reflow to re-trigger animation
+        factCard.classList.add('fact-enter');
+        factCard.classList.add('is-visible');
+
+        setLoadingState(false);
+      }
+
+      // Check whether a summary meets all usability constraints
+      function isUsableSummary(summary) {
+        if (!summary || !summary.title) return false;
+        if (summary.type === 'disambiguation') return false;
+        if (summary.title.toLowerCase().startsWith('list of')) return false;
+        if (!summary.extract || summary.extract.trim().length < 80) return false;
+        return true;
+      }
+
+      // Topic-based fact fetcher with deepcat search, fallback and candidate retries
+      async function fetchTopicFact(topicObj) {
+        const category = topicObj.category;
+        let candidates = [];
+
+        // 1. Primary: Search deepcat for category
+        try {
+          const primaryUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=deepcat:${encodeURIComponent('"' + category + '"')}&srnamespace=0&srsort=random&srlimit=10&format=json&origin=*`;
+          const res = await fetch(primaryUrl);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.query && data.query.search && data.query.search.length > 0) {
+              candidates = data.query.search.map(item => item.title);
+            }
+          }
+        } catch (e) {
+          // Fallback will catch below
+        }
+
+        // 2. Fallback: Category members if primary returns nothing or errors
+        if (!candidates || candidates.length === 0) {
+          try {
+            const fallbackUrl = `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:${encodeURIComponent(category)}&cmtype=page&cmlimit=500&format=json&origin=*`;
+            const res = await fetch(fallbackUrl);
+            if (res.ok) {
+              const data = await res.json();
+              if (data && data.query && data.query.categorymembers && data.query.categorymembers.length > 0) {
+                // Shuffle members and pick random slice
+                const members = data.query.categorymembers.filter(m => m.ns === 0 && !m.title.toLowerCase().startsWith('list of'));
+                const shuffled = members.sort(() => 0.5 - Math.random());
+                candidates = shuffled.slice(0, 10).map(m => m.title);
+              }
+            }
+          } catch (e) {
+            // Failed
+          }
+        }
+
+        if (!candidates || candidates.length === 0) {
+          throw new Error('NO_FACTS_FOUND');
+        }
+
+        // 3. Evaluate candidate summaries (retry up to 3 times before error)
+        let retryAttempts = 0;
+        for (const title of candidates) {
+          if (title.toLowerCase().startsWith('list of')) {
+            continue;
+          }
+
+          try {
+            const summaryUrl = `${SPECIFIC_API_URL}${encodeURIComponent(title)}`;
+            const sRes = await fetch(summaryUrl, {
+              headers: { 'Accept': 'application/json' }
+            });
+
+            if (!sRes.ok) {
+              retryAttempts++;
+              if (retryAttempts >= 3) break;
+              continue;
+            }
+
+            const summary = await sRes.json();
+            if (!isUsableSummary(summary)) {
+              retryAttempts++;
+              if (retryAttempts >= 3) break;
+              continue;
+            }
+
+            // Usable summary found!
+            return summary;
+          } catch (err) {
+            retryAttempts++;
+            if (retryAttempts >= 3) break;
+          }
+        }
+
+        throw new Error('NO_FACTS_FOUND');
+      }
+
+      // General Next Fact Loader (handles Random vs Topic)
+      async function loadNextFact() {
+        setLoadingState(true);
+        const topicObj = getSelectedTopicObject();
+
+        try {
+          if (topicObj) {
+            // Fetch topic-specific fact
+            const summary = await fetchTopicFact(topicObj);
+            renderFact(summary, topicObj.label);
+          } else {
+            // Fetch pure random fact
+            const response = await fetch(RANDOM_API_URL, {
+              headers: { 'Accept': 'application/json' }
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (!isUsableSummary(data)) {
+              // Retry once for clean random summary
+              return loadNextFact();
+            }
+
+            renderFact(data, '');
+          }
+        } catch (error) {
+          if (error.message === 'NO_FACTS_FOUND') {
+            showErrorState('No facts found for this topic, try another one.');
+          } else {
+            showErrorState("Couldn't load a fact. Try again.");
+          }
+        }
+      }
+
+      // Load a specific fact by Title (e.g. from ?fact= URL param)
+      async function loadSpecificFact(title, topicLabel) {
+        setLoadingState(true);
+
+        try {
+          const endpoint = `${SPECIFIC_API_URL}${encodeURIComponent(title)}`;
+          const response = await fetch(endpoint, {
+            headers: { 'Accept': 'application/json' }
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+          renderFact(data, topicLabel);
+        } catch (error) {
+          // If specific fact fails, fall back to next fact or error
+          showErrorState("Couldn't load a fact. Try again.");
+        }
+      }
+
+      // Copy Shareable Link Handler
+      async function handleCopyLink() {
+        if (!currentFactTitle) return;
+
+        const url = new URL(window.location.origin + window.location.pathname);
+        if (currentTopicLabel) {
+          url.searchParams.set('topic', currentTopicLabel);
+        }
+        url.searchParams.set('fact', currentFactTitle);
+        const shareUrl = url.toString();
+
+        let copied = false;
+        if (navigator.clipboard && window.isSecureContext) {
+          try {
+            await navigator.clipboard.writeText(shareUrl);
+            copied = true;
+          } catch (err) {
+            copied = false;
+          }
+        }
+
+        if (!copied) {
+          // Fallback copying method
+          const textArea = document.createElement('textarea');
+          textArea.value = shareUrl;
+          textArea.style.position = 'fixed';
+          textArea.style.opacity = '0';
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            copied = true;
+          } catch (err) {
+            copied = false;
+          }
+          document.body.removeChild(textArea);
+        }
+
+        if (copied) {
+          copyBtn.classList.add('copied');
+          copyText.textContent = 'Copied!';
+          if (copyTimeoutId) clearTimeout(copyTimeoutId);
+          copyTimeoutId = setTimeout(() => {
+            copyBtn.classList.remove('copied');
+            copyText.textContent = 'Copy link';
+          }, 2000);
+        }
+      }
+
+      // Event Listeners
+      nextBtn.addEventListener('click', () => {
+        if (!isLoading) {
+          loadNextFact();
+        }
+      });
+
+      retryBtn.addEventListener('click', () => {
+        if (!isLoading) {
+          loadNextFact();
+        }
+      });
+
+      copyBtn.addEventListener('click', handleCopyLink);
+
+      // Topic selector change: immediately load a random fact from that topic
+      topicSelect.addEventListener('change', () => {
+        const selected = topicSelect.value;
+        saveTopicPreference(selected);
+        if (!isLoading) {
+          loadNextFact();
+        }
+      });
+
+      // Keyboard navigation: Spacebar or Right Arrow loads next fact
+      window.addEventListener('keydown', (e) => {
+        // Ignore keyboard shortcuts while the topic dropdown is focused
+        if (document.activeElement === topicSelect) {
+          return;
+        }
+
+        const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+        if (activeTag === 'input' || activeTag === 'textarea' || activeTag === 'select') {
+          return;
+        }
+
+        if (e.code === 'Space' || e.key === ' ' || e.key === 'ArrowRight') {
+          // If copy button or retry button is actively focused, allow standard button activation
+          if (document.activeElement === copyBtn && (e.code === 'Space' || e.key === ' ')) {
+            return;
+          }
+          if (document.activeElement === retryBtn && (e.code === 'Space' || e.key === ' ')) {
+            return;
+          }
+
+          // Prevent page scroll on Space
+          if (e.code === 'Space' || e.key === ' ') {
+            e.preventDefault();
+          }
+
+          if (!isLoading) {
+            loadNextFact();
+          }
+        }
+      });
+
+      // Handle browser back / forward navigation
+      window.addEventListener('popstate', (e) => {
+        const params = new URLSearchParams(window.location.search);
+        const topicParam = params.get('topic');
+        const factParam = params.get('fact');
+
+        if (topicParam) {
+          const matched = TOPICS.find(t => t.label.toLowerCase() === topicParam.toLowerCase());
+          topicSelect.value = matched ? matched.label : '';
+        } else {
+          topicSelect.value = '';
+        }
+
+        if (factParam) {
+          loadSpecificFact(factParam, topicSelect.value);
+        } else {
+          loadNextFact();
+        }
+      });
+
+      // Initialize on page load
+      function init() {
+        buildTopicDropdown();
+
+        const params = new URLSearchParams(window.location.search);
+        const topicParam = params.get('topic');
+        const factParam = params.get('fact');
+
+        let initialTopic = '';
+
+        if (topicParam && topicParam.trim()) {
+          const matched = TOPICS.find(t => t.label.toLowerCase() === topicParam.trim().toLowerCase());
+          if (matched) {
+            initialTopic = matched.label;
+            topicSelect.value = matched.label;
+            saveTopicPreference(matched.label);
+          }
+        } else {
+          const savedTopic = getTopicPreference();
+          if (savedTopic) {
+            const matched = TOPICS.find(t => t.label.toLowerCase() === savedTopic.toLowerCase());
+            if (matched) {
+              initialTopic = matched.label;
+              topicSelect.value = matched.label;
+            }
+          }
+        }
+
+        if (factParam && factParam.trim()) {
+          loadSpecificFact(factParam.trim(), initialTopic);
+        } else {
+          loadNextFact();
+        }
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
