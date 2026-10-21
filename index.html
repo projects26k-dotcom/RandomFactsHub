@@ -887,120 +887,161 @@
     (function () {
       'use strict';
 
-      // Master Topic List: { group, label, category }
+      // Curated List of Highly Popular Topics with Verified Seeds and Categories
       const TOPICS = [
-        // Science
-        { group: 'Science', label: 'Physics', category: 'Physics' },
-        { group: 'Science', label: 'Chemistry', category: 'Chemistry' },
-        { group: 'Science', label: 'Biology', category: 'Biology' },
-        { group: 'Science', label: 'Astronomy', category: 'Astronomy' },
-        { group: 'Science', label: 'Space Exploration', category: 'Space exploration' },
-        { group: 'Science', label: 'Earth Science', category: 'Earth sciences' },
-        { group: 'Science', label: 'Geology', category: 'Geology' },
-        { group: 'Science', label: 'Oceanography', category: 'Oceanography' },
-        { group: 'Science', label: 'Genetics', category: 'Genetics' },
-        { group: 'Science', label: 'Neuroscience', category: 'Neuroscience' },
-        { group: 'Science', label: 'Environment', category: 'Environment' },
-        { group: 'Science', label: 'Climate Change', category: 'Climate change' },
-        { group: 'Science', label: 'Mathematics', category: 'Mathematics' },
-        { group: 'Science', label: 'Statistics', category: 'Statistics' },
-
-        // Technology
-        { group: 'Technology', label: 'Technology', category: 'Technology' },
-        { group: 'Technology', label: 'Computer Science', category: 'Computer science' },
-        { group: 'Technology', label: 'Internet', category: 'Internet' },
-        { group: 'Technology', label: 'Artificial Intelligence', category: 'Artificial intelligence' },
-        { group: 'Technology', label: 'Programming', category: 'Programming languages' },
-        { group: 'Technology', label: 'Engineering', category: 'Engineering' },
-        { group: 'Technology', label: 'Inventions', category: 'Inventions' },
-        { group: 'Technology', label: 'Robotics', category: 'Robotics' },
-        { group: 'Technology', label: 'Electronics', category: 'Electronics' },
-        { group: 'Technology', label: 'Video Games', category: 'Video games' },
-        { group: 'Technology', label: 'Cybersecurity', category: 'Computer security' },
-
-        // Nature
-        { group: 'Nature', label: 'Nature', category: 'Nature' },
-        { group: 'Nature', label: 'Animals', category: 'Animals' },
-        { group: 'Nature', label: 'Birds', category: 'Birds' },
-        { group: 'Nature', label: 'Marine Life', category: 'Marine life' },
-        { group: 'Nature', label: 'Insects', category: 'Insects' },
-        { group: 'Nature', label: 'Dinosaurs', category: 'Dinosaurs' },
-        { group: 'Nature', label: 'Plants', category: 'Plants' },
-        { group: 'Nature', label: 'Natural Disasters', category: 'Natural disasters' },
-        { group: 'Nature', label: 'Weather', category: 'Weather' },
-
-        // History
-        { group: 'History', label: 'History', category: 'History' },
-        { group: 'History', label: 'Ancient History', category: 'Ancient history' },
-        { group: 'History', label: 'Medieval History', category: 'Middle Ages' },
-        { group: 'History', label: 'Modern History', category: 'Modern history' },
-        { group: 'History', label: 'World War I', category: 'World War I' },
-        { group: 'History', label: 'World War II', category: 'World War II' },
-        { group: 'History', label: 'Military', category: 'Military history' },
-        { group: 'History', label: 'Ancient Civilizations', category: 'Ancient civilizations' },
-        { group: 'History', label: 'Archaeology', category: 'Archaeology' },
-        { group: 'History', label: 'Empires', category: 'Empires' },
-
-        // Geography & Places
-        { group: 'Geography & Places', label: 'Geography', category: 'Geography' },
-        { group: 'Geography & Places', label: 'Countries', category: 'Countries' },
-        { group: 'Geography & Places', label: 'Cities', category: 'Cities' },
-        { group: 'Geography & Places', label: 'Islands', category: 'Islands' },
-        { group: 'Geography & Places', label: 'Mountains', category: 'Mountains' },
-        { group: 'Geography & Places', label: 'Rivers', category: 'Rivers' },
-        { group: 'Geography & Places', label: 'Landmarks', category: 'Landmarks' },
-        { group: 'Geography & Places', label: 'Travel & Tourism', category: 'Tourism' },
-
-        // India
-        { group: 'India', label: 'India', category: 'India' },
-        { group: 'India', label: 'History of India', category: 'History of India' },
-        { group: 'India', label: 'Culture of India', category: 'Culture of India' },
-        { group: 'India', label: 'Indian Cinema', category: 'Cinema of India' },
-        { group: 'India', label: 'Indian Cuisine', category: 'Indian cuisine' },
-
-        // People
-        { group: 'People', label: 'Scientists', category: 'Scientists' },
-        { group: 'People', label: 'Inventors', category: 'Inventors' },
-        { group: 'People', label: 'Explorers', category: 'Explorers' },
-        { group: 'People', label: 'Writers', category: 'Writers' },
-        { group: 'People', label: 'Musicians', category: 'Musicians' },
-        { group: 'People', label: 'Artists', category: 'Artists' },
-        { group: 'People', label: 'Athletes', category: 'Sportspeople' },
-        { group: 'People', label: 'Leaders', category: 'Political leaders' },
-        { group: 'People', label: 'Philosophers', category: 'Philosophers' },
-
-        // Arts & Culture
-        { group: 'Arts & Culture', label: 'Art', category: 'Art' },
-        { group: 'Arts & Culture', label: 'Architecture', category: 'Architecture' },
-        { group: 'Arts & Culture', label: 'Music', category: 'Music' },
-        { group: 'Arts & Culture', label: 'Movies', category: 'Films' },
-        { group: 'Arts & Culture', label: 'Television', category: 'Television' },
-        { group: 'Arts & Culture', label: 'Literature', category: 'Literature' },
-        { group: 'Arts & Culture', label: 'Theatre', category: 'Theatre' },
-        { group: 'Arts & Culture', label: 'Photography', category: 'Photography' },
-        { group: 'Arts & Culture', label: 'Fashion', category: 'Fashion' },
-        { group: 'Arts & Culture', label: 'Mythology', category: 'Mythology' },
-        { group: 'Arts & Culture', label: 'Folklore', category: 'Folklore' },
-        { group: 'Arts & Culture', label: 'Festivals', category: 'Festivals' },
-
-        // Society & Life
-        { group: 'Society & Life', label: 'Health', category: 'Health' },
-        { group: 'Society & Life', label: 'Medicine', category: 'Medicine' },
-        { group: 'Society & Life', label: 'Psychology', category: 'Psychology' },
-        { group: 'Society & Life', label: 'Food & Drink', category: 'Food and drink' },
-        { group: 'Society & Life', label: 'Sports', category: 'Sports' },
-        { group: 'Society & Life', label: 'Olympics', category: 'Olympic Games' },
-        { group: 'Society & Life', label: 'Business', category: 'Business' },
-        { group: 'Society & Life', label: 'Economics', category: 'Economics' },
-        { group: 'Society & Life', label: 'Law', category: 'Law' },
-        { group: 'Society & Life', label: 'Politics', category: 'Politics' },
-        { group: 'Society & Life', label: 'Education', category: 'Education' },
-        { group: 'Society & Life', label: 'Languages', category: 'Languages' },
-        { group: 'Society & Life', label: 'Transport', category: 'Transport' },
-        { group: 'Society & Life', label: 'Crime', category: 'Crime' },
-        { group: 'Society & Life', label: 'Religion', category: 'Religion' },
-        { group: 'Society & Life', label: 'Philosophy', category: 'Philosophy' },
-        { group: 'Society & Life', label: 'Culture', category: 'Culture' }
+        {
+          id: 'space',
+          label: 'Space & Astronomy',
+          icon: '🌌',
+          categories: ['Solar_System', 'Astronomical_objects', 'Planets_of_the_Solar_System', 'Constellations'],
+          seeds: [
+            'Solar System', 'James Webb Space Telescope', 'Black hole', 'Milky Way',
+            'Neutron star', 'Hubble Space Telescope', 'Saturn', 'Exoplanet',
+            'Supernova', 'Europa (moon)', 'Big Bang', 'Kuiper belt',
+            'Halley\'s Comet', 'Event horizon', 'Voyager 1', 'Andromeda Galaxy',
+            'Jupiter', 'Mars rover', 'Nebula', 'Pulsar'
+          ]
+        },
+        {
+          id: 'science',
+          label: 'Science & Physics',
+          icon: '🔬',
+          categories: ['Concepts_in_physics', 'Physical_phenomena', 'Chemical_elements', 'Quantum_mechanics'],
+          seeds: [
+            'Quantum mechanics', 'Theory of relativity', 'Higgs boson', 'Schrödinger\'s cat',
+            'Speed of light', 'Periodic table', 'Gravitational wave', 'Superconductivity',
+            'Antimatter', 'Thermodynamics', 'Hadron', 'Standard Model',
+            'Nuclear fusion', 'CRISPR gene editing', 'Quantum entanglement', 'Dark matter',
+            'Radioactivity', 'Absolute zero', 'Doppler effect', 'CERN'
+          ]
+        },
+        {
+          id: 'animals',
+          label: 'Animals & Nature',
+          icon: '🦁',
+          categories: ['Dinosaurs', 'Birds_by_common_name', 'Cetaceans', 'Carnivorans', 'Insects'],
+          seeds: [
+            'Blue whale', 'Peregrine falcon', 'Octopus', 'Platypus',
+            'Komodo dragon', 'Honey badger', 'Axolotl', 'Cheetah',
+            'Colossal squid', 'Capybara', 'Chameleon', 'Electric eel',
+            'Sloth', 'Tardigrade', 'Narwhal', 'Tyrannosaurus',
+            'Immortal jellyfish', 'Mantis shrimp', 'Snow leopard', 'Giant panda'
+          ]
+        },
+        {
+          id: 'history',
+          label: 'World History',
+          icon: '📜',
+          categories: ['Ancient_civilizations', 'Empires', 'Archaeological_sites', 'Middle_Ages'],
+          seeds: [
+            'Library of Alexandria', 'Colosseum', 'Silk Road', 'Great Pyramid of Giza',
+            'Terracotta Army', 'Black Death', 'Industrial Revolution', 'Machu Picchu',
+            'Apollo 11', 'Renaissance', 'Mesopotamia', 'Ancient Egypt',
+            'Fall of Constantinople', 'Magna Carta', 'Pompeii', 'Mayan civilization',
+            'Byzantine Empire', 'Hanging Gardens of Babylon', 'Roanoke Colony', 'Rosetta Stone'
+          ]
+        },
+        {
+          id: 'technology',
+          label: 'Technology & AI',
+          icon: '🤖',
+          categories: ['Artificial_intelligence', 'Computer_science', 'Robotics', 'Emerging_technologies'],
+          seeds: [
+            'Artificial intelligence', 'Alan Turing', 'World Wide Web', 'Quantum computing',
+            'ENIAC', 'Moore\'s law', 'Machine learning', 'Blockchain',
+            'Microprocessor', 'James Gosling', 'Unix', 'Internet protocol suite',
+            'Deep Blue (chess computer)', 'Self-driving car', 'Neural network', 'Fiber-optic communication',
+            'Grace Hopper', 'Ada Lovelace', 'Transistor', 'Semiconductor'
+          ]
+        },
+        {
+          id: 'human-body',
+          label: 'Human Body & Brain',
+          icon: '🧠',
+          categories: ['Human_anatomy', 'Neuroscience', 'Cognitive_biases', 'Human_physiology'],
+          seeds: [
+            'Neuron', 'Circadian rhythm', 'Hippocampus', 'Placebo',
+            'Immune system', 'Neuroplasticity', 'REM sleep', 'Synesthesia',
+            'Dopamine', 'Endorphins', 'Prefrontal cortex', 'Memory consolidation',
+            'Fight-or-flight response', 'Deoxyribonucleic acid', 'Blood–brain barrier',
+            'Gut–brain axis', 'Optical illusion', 'Pain receptor', 'Amygdala'
+          ]
+        },
+        {
+          id: 'geography',
+          label: 'Geography & Earth',
+          icon: '🌍',
+          categories: ['Volcanoes', 'Natural_wonders_of_the_world', 'Extreme_points_of_Earth', 'Deserts'],
+          seeds: [
+            'Mariana Trench', 'Mount Everest', 'Aurora (natural phenomenon)', 'Grand Canyon',
+            'Dead Sea', 'Victoria Falls', 'Ring of Fire', 'Great Barrier Reef',
+            'Antarctica', 'Amazon rainforest', 'Plate tectonics', 'Yellowstone Caldera',
+            'Salar de Uyuni', 'Bermuda Triangle', 'Sahara', 'Galápagos Islands',
+            'Angel Falls', 'Krakatoa', 'Dead Vlei', 'Great Blue Hole'
+          ]
+        },
+        {
+          id: 'mythology',
+          label: 'Mythology & Legends',
+          icon: '🏛️',
+          categories: ['Greek_mythology', 'Norse_mythology', 'Egyptian_mythology', 'Mythological_creatures'],
+          seeds: [
+            'Greek mythology', 'Norse mythology', 'Odin', 'Zeus',
+            'Anubis', 'Egyptian mythology', 'Valhalla', 'Epic of Gilgamesh',
+            'Prometheus', 'Ragnarök', 'Minotaur', 'Phoenix (mythology)',
+            'Sphinx', 'Medusa', 'Achilles', 'Thor', 'Kraken', 'Labyrinth', 'Atlantis'
+          ]
+        },
+        {
+          id: 'india',
+          label: 'India & Heritage',
+          icon: '🇮🇳',
+          categories: ['World_Heritage_Sites_in_India', 'History_of_India', 'Monuments_and_memorials_in_India', 'Indian_culture'],
+          seeds: [
+            'Taj Mahal', 'Indus Valley Civilisation', 'ISRO', 'Chandrayaan-3',
+            'Ajanta Caves', 'Ashoka', 'Hampi', 'Nalanda',
+            'Aryabhata', 'Vedas', 'Qutb Minar', 'Konark Sun Temple',
+            'Brihadisvara Temple', 'Sundarbans', 'Western Ghats', 'Chola dynasty',
+            'Rani ki Vav', 'Ellora Caves', 'Meenakshi Temple', 'Harappa'
+          ]
+        },
+        {
+          id: 'sports',
+          label: 'Sports & Games',
+          icon: '⚽',
+          categories: ['Olympic_sports', 'World_championships', 'Traditional_sports', 'Ball_games'],
+          seeds: [
+            'Olympic Games', 'FIFA World Cup', 'Usain Bolt', 'Tour de France',
+            'Michael Phelps', 'Wimbledon Championships', 'Marathon', 'Super Bowl',
+            'Cricket World Cup', 'Jesse Owens', 'Chess', 'Muhammad Ali',
+            'Ancient Olympic Games', 'Formula One', 'Paralympic Games', 'Decathlon'
+          ]
+        },
+        {
+          id: 'cinema',
+          label: 'Cinema & Pop Culture',
+          icon: '🎬',
+          categories: ['Academy_Award-winning_films', 'Film_genres', 'Animation', 'Cinema_by_country'],
+          seeds: [
+            'Cinema of the United States', 'Citizen Kane', 'Academy Awards', 'Stop motion',
+            'Animation', 'Technicolor', 'Film noir', 'Special effect',
+            'Cannes Film Festival', 'IMAX', 'Silent film', 'Studio Ghibli',
+            'Cinematography', 'The Wizard of Oz (1939 film)', 'Kinetoscope', 'A Trip to the Moon'
+          ]
+        },
+        {
+          id: 'food',
+          label: 'Food & Culinary',
+          icon: '🍕',
+          categories: ['Spices', 'Cheeses', 'Breads', 'Traditional_food', 'Fermented_foods'],
+          seeds: [
+            'Fermentation in food processing', 'History of chocolate', 'History of coffee', 'Origin of tea',
+            'Sourdough', 'Cheese', 'Saffron', 'Olive oil',
+            'Spices', 'History of pizza', 'Baking', 'Umami',
+            'Vanilla', 'Honey', 'Cocoa bean', 'Truffle (fungus)',
+            'Brewing', 'Maple syrup', 'Wasabi', 'Cacao'
+          ]
+        }
       ];
 
       // DOM Elements
@@ -1031,33 +1072,21 @@
       const WIKI_REST_RANDOM = 'https://en.wikipedia.org/api/rest_v1/page/random/summary';
       const WIKI_REST_SUMMARY = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
 
-      // Populate Topic Dropdown with Optgroups
+      // Populate Topic Dropdown with Curated, Highly Used Topics
       function buildTopicDropdown() {
-        const groups = {};
+        topicSelect.innerHTML = '<option value="">🎲 Any topic (Random)</option>';
         TOPICS.forEach(topic => {
-          if (!groups[topic.group]) {
-            groups[topic.group] = [];
-          }
-          groups[topic.group].push(topic);
-        });
-
-        Object.keys(groups).forEach(groupName => {
-          const optgroup = document.createElement('optgroup');
-          optgroup.label = groupName;
-          groups[groupName].forEach(topic => {
-            const option = document.createElement('option');
-            option.value = topic.label;
-            option.textContent = topic.label;
-            optgroup.appendChild(option);
-          });
-          topicSelect.appendChild(optgroup);
+          const option = document.createElement('option');
+          option.value = topic.id;
+          option.textContent = `${topic.icon} ${topic.label}`;
+          topicSelect.appendChild(option);
         });
       }
 
       function getSelectedTopicObject() {
         const val = topicSelect.value;
         if (!val) return null;
-        return TOPICS.find(t => t.label.toLowerCase() === val.toLowerCase()) || null;
+        return TOPICS.find(t => t.id === val || t.label.toLowerCase() === val.toLowerCase()) || null;
       }
 
       function saveTopicPreference(label) {
@@ -1202,7 +1231,10 @@
       function isUsableSummary(summary) {
         if (!summary || !summary.title) return false;
         if (summary.type === 'disambiguation') return false;
-        if (summary.title.toLowerCase().startsWith('list of')) return false;
+        const lowerTitle = summary.title.toLowerCase();
+        if (lowerTitle.startsWith('list of') || lowerTitle.startsWith('index of') || lowerTitle.startsWith('outline of') || lowerTitle.startsWith('portal:')) {
+          return false;
+        }
         if (!summary.extract || summary.extract.trim().length < 80) return false;
         return true;
       }
@@ -1258,68 +1290,94 @@
         return await res.json();
       }
 
-      // Topic-based fact fetcher with deepcat search, fallback and candidate retries
-      async function fetchTopicFact(topicObj) {
-        const category = topicObj.category;
-        let candidates = [];
+      // Topic candidate pools and history tracking
+      const topicPools = {};
+      const topicHistory = {};
+      const fetchingCategories = new Set();
 
-        // 1. Primary: Search deepcat for category
+      // Expand topic pool with verified Wikipedia category members in the background
+      async function expandTopicPool(topicObj) {
+        if (!topicObj || !topicObj.categories || fetchingCategories.has(topicObj.id)) return;
+        fetchingCategories.add(topicObj.id);
+
         try {
-          const primaryUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=deepcat:${encodeURIComponent('"' + category + '"')}&srnamespace=0&srsort=random&srlimit=10&format=json&origin=*`;
-          const res = await fetch(primaryUrl);
+          const category = topicObj.categories[Math.floor(Math.random() * topicObj.categories.length)];
+          const url = `${WIKI_ACTION_API}?action=query&list=categorymembers&cmtitle=Category:${encodeURIComponent(category)}&cmtype=page&cmlimit=50&format=json&origin=*`;
+          const res = await fetch(url);
           if (res.ok) {
             const data = await res.json();
-            if (data && data.query && data.query.search && data.query.search.length > 0) {
-              candidates = data.query.search.map(item => item.title);
+            if (data && data.query && data.query.categorymembers) {
+              const members = data.query.categorymembers
+                .filter(m => m.ns === 0 && !m.title.toLowerCase().startsWith('list of') && !m.title.toLowerCase().startsWith('portal:') && !m.title.toLowerCase().startsWith('outline of') && !m.title.toLowerCase().startsWith('index of'))
+                .map(m => m.title);
+
+              if (!topicPools[topicObj.id]) {
+                topicPools[topicObj.id] = [...topicObj.seeds];
+              }
+
+              members.forEach(title => {
+                if (!topicPools[topicObj.id].includes(title)) {
+                  topicPools[topicObj.id].push(title);
+                }
+              });
             }
           }
         } catch (e) {
-          // Fallback will catch below
+          // Fallback to existing pool
+        } finally {
+          fetchingCategories.delete(topicObj.id);
+        }
+      }
+
+      // Topic-based fact fetcher: strictly on-topic, robust candidate selection
+      async function fetchTopicFact(topicObj) {
+        if (!topicObj) throw new Error('NO_TOPIC_SELECTED');
+
+        if (!topicPools[topicObj.id] || topicPools[topicObj.id].length === 0) {
+          topicPools[topicObj.id] = [...topicObj.seeds].sort(() => 0.5 - Math.random());
         }
 
-        // 2. Fallback: Category members if primary returns nothing or errors
-        if (!candidates || candidates.length === 0) {
-          try {
-            const fallbackUrl = `https://en.wikipedia.org/w/api.php?action=query&list=categorymembers&cmtitle=Category:${encodeURIComponent(category)}&cmtype=page&cmlimit=500&format=json&origin=*`;
-            const res = await fetch(fallbackUrl);
-            if (res.ok) {
-              const data = await res.json();
-              if (data && data.query && data.query.categorymembers && data.query.categorymembers.length > 0) {
-                // Shuffle members and pick random slice
-                const members = data.query.categorymembers.filter(m => m.ns === 0 && !m.title.toLowerCase().startsWith('list of'));
-                const shuffled = members.sort(() => 0.5 - Math.random());
-                candidates = shuffled.slice(0, 10).map(m => m.title);
-              }
-            }
-          } catch (e) {
-            // Failed
-          }
+        if (!topicHistory[topicObj.id]) {
+          topicHistory[topicObj.id] = new Set();
         }
 
-        if (!candidates || candidates.length === 0) {
-          throw new Error('NO_FACTS_FOUND');
+        // Trigger background expansion if pool size is moderate
+        if (topicPools[topicObj.id].length < 35) {
+          expandTopicPool(topicObj);
         }
 
-        // 3. Evaluate candidate summaries (retry up to 3 times before error)
-        let retryAttempts = 0;
+        // Find candidates not yet shown in current session
+        let available = topicPools[topicObj.id].filter(t => !topicHistory[topicObj.id].has(t));
+        if (available.length === 0) {
+          topicHistory[topicObj.id].clear();
+          available = [...topicPools[topicObj.id]].sort(() => 0.5 - Math.random());
+        }
+
+        // Try candidate summaries
+        const candidates = available.slice(0, 4);
         for (const title of candidates) {
-          if (title.toLowerCase().startsWith('list of')) {
-            continue;
-          }
-
           try {
             const summary = await fetchSummaryByTitle(title);
-            if (!isUsableSummary(summary)) {
-              retryAttempts++;
-              if (retryAttempts >= 3) break;
-              continue;
+            if (summary && isUsableSummary(summary)) {
+              topicHistory[topicObj.id].add(title);
+              return summary;
             }
-
-            // Usable summary found!
-            return summary;
           } catch (err) {
-            retryAttempts++;
-            if (retryAttempts >= 3) break;
+            // Continue
+          }
+        }
+
+        // Fallback to topic seeds
+        const shuffledSeeds = [...topicObj.seeds].sort(() => 0.5 - Math.random());
+        for (const seedTitle of shuffledSeeds) {
+          try {
+            const summary = await fetchSummaryByTitle(seedTitle);
+            if (summary && isUsableSummary(summary)) {
+              topicHistory[topicObj.id].add(seedTitle);
+              return summary;
+            }
+          } catch (err) {
+            // Continue
           }
         }
 
@@ -1480,8 +1538,9 @@
         const factParam = params.get('fact');
 
         if (topicParam) {
-          const matched = TOPICS.find(t => t.label.toLowerCase() === topicParam.toLowerCase());
-          topicSelect.value = matched ? matched.label : '';
+          const query = topicParam.trim().toLowerCase();
+          const matched = TOPICS.find(t => t.id === query || t.label.toLowerCase() === query);
+          topicSelect.value = matched ? matched.id : '';
         } else {
           topicSelect.value = '';
         }
@@ -1504,19 +1563,21 @@
         let initialTopic = '';
 
         if (topicParam && topicParam.trim()) {
-          const matched = TOPICS.find(t => t.label.toLowerCase() === topicParam.trim().toLowerCase());
+          const query = topicParam.trim().toLowerCase();
+          const matched = TOPICS.find(t => t.id === query || t.label.toLowerCase() === query);
           if (matched) {
             initialTopic = matched.label;
-            topicSelect.value = matched.label;
-            saveTopicPreference(matched.label);
+            topicSelect.value = matched.id;
+            saveTopicPreference(matched.id);
           }
         } else {
           const savedTopic = getTopicPreference();
           if (savedTopic) {
-            const matched = TOPICS.find(t => t.label.toLowerCase() === savedTopic.toLowerCase());
+            const query = savedTopic.trim().toLowerCase();
+            const matched = TOPICS.find(t => t.id === query || t.label.toLowerCase() === query);
             if (matched) {
               initialTopic = matched.label;
-              topicSelect.value = matched.label;
+              topicSelect.value = matched.id;
             }
           }
         }
