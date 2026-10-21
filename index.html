@@ -7,6 +7,10 @@
   <meta name="description" content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
   <link rel="canonical" href="https://randomfactshub.com/">
 
+  <!-- Favicons -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="alternate icon" type="image/x-icon" href="/favicon.ico">
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://randomfactshub.com/">
@@ -1022,9 +1026,10 @@
       let isLoading = false;
       let copyTimeoutId = null;
 
-      // API Endpoints
-      const RANDOM_API_URL = 'https://en.wikipedia.org/api/rest_v1/page/random/summary';
-      const SPECIFIC_API_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
+      // Wikipedia API Endpoints (Action API with origin=* resolves CORS on all domains)
+      const WIKI_ACTION_API = 'https://en.wikipedia.org/w/api.php';
+      const WIKI_REST_RANDOM = 'https://en.wikipedia.org/api/rest_v1/page/random/summary';
+      const WIKI_REST_SUMMARY = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
 
       // Populate Topic Dropdown with Optgroups
       function buildTopicDropdown() {
@@ -1171,6 +1176,28 @@
         setLoadingState(false);
       }
 
+      // Format a MediaWiki Action API page object into a unified summary structure
+      function formatActionApiPage(page) {
+        if (!page || page.missing !== undefined || page.invalid !== undefined) {
+          return null;
+        }
+        const isDisambig = (page.pageprops && page.pageprops.disambiguation !== undefined) ||
+          (page.description && page.description.toLowerCase().includes('disambiguation'));
+
+        return {
+          title: page.title || '',
+          description: page.description || '',
+          extract: page.extract || '',
+          type: isDisambig ? 'disambiguation' : 'standard',
+          thumbnail: (page.thumbnail && page.thumbnail.source) ? { source: page.thumbnail.source } : null,
+          content_urls: {
+            desktop: {
+              page: page.fullurl || `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title || '')}`
+            }
+          }
+        };
+      }
+
       // Check whether a summary meets all usability constraints
       function isUsableSummary(summary) {
         if (!summary || !summary.title) return false;
@@ -1178,6 +1205,57 @@
         if (summary.title.toLowerCase().startsWith('list of')) return false;
         if (!summary.extract || summary.extract.trim().length < 80) return false;
         return true;
+      }
+
+      // Fetch summary by title using Action API with origin=*, falling back to REST API
+      async function fetchSummaryByTitle(title) {
+        // 1. Primary: MediaWiki Action API with origin=* (universally CORS-enabled, no redirects)
+        try {
+          const actionUrl = `${WIKI_ACTION_API}?action=query&titles=${encodeURIComponent(title)}&prop=extracts|pageimages|description|info|pageprops&ppprop=disambiguation&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=600&inprop=url&format=json&origin=*`;
+          const res = await fetch(actionUrl);
+          if (res.ok) {
+            const data = await res.json();
+            const pages = data.query && data.query.pages ? Object.values(data.query.pages) : [];
+            if (pages.length > 0) {
+              const formatted = formatActionApiPage(pages[0]);
+              if (formatted) return formatted;
+            }
+          }
+        } catch (e) {
+          // Fall back to REST API below
+        }
+
+        // 2. Fallback: REST API
+        const fallbackUrl = `${WIKI_REST_SUMMARY}${encodeURIComponent(title)}`;
+        const res = await fetch(fallbackUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+      }
+
+      // Fetch pure random fact using Action API with origin=*, falling back to REST API
+      async function fetchRandomFact() {
+        // 1. Primary: Action API with generator=random (fetches 5 candidates in 1 request with origin=*)
+        try {
+          const actionUrl = `${WIKI_ACTION_API}?action=query&generator=random&grnnamespace=0&grnlimit=5&grnfilterredir=nonredirects&prop=extracts|pageimages|description|info|pageprops&ppprop=disambiguation&exintro=1&explaintext=1&piprop=thumbnail&pithumbsize=600&inprop=url&format=json&origin=*`;
+          const res = await fetch(actionUrl);
+          if (res.ok) {
+            const data = await res.json();
+            const pages = data.query && data.query.pages ? Object.values(data.query.pages) : [];
+            for (const page of pages) {
+              const summary = formatActionApiPage(page);
+              if (summary && isUsableSummary(summary)) {
+                return summary;
+              }
+            }
+          }
+        } catch (e) {
+          // Fall back to REST API below
+        }
+
+        // 2. Fallback: REST API
+        const res = await fetch(WIKI_REST_RANDOM);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
       }
 
       // Topic-based fact fetcher with deepcat search, fallback and candidate retries
@@ -1230,18 +1308,7 @@
           }
 
           try {
-            const summaryUrl = `${SPECIFIC_API_URL}${encodeURIComponent(title)}`;
-            const sRes = await fetch(summaryUrl, {
-              headers: { 'Accept': 'application/json' }
-            });
-
-            if (!sRes.ok) {
-              retryAttempts++;
-              if (retryAttempts >= 3) break;
-              continue;
-            }
-
-            const summary = await sRes.json();
+            const summary = await fetchSummaryByTitle(title);
             if (!isUsableSummary(summary)) {
               retryAttempts++;
               if (retryAttempts >= 3) break;
@@ -1271,21 +1338,12 @@
             renderFact(summary, topicObj.label);
           } else {
             // Fetch pure random fact
-            const response = await fetch(RANDOM_API_URL, {
-              headers: { 'Accept': 'application/json' }
-            });
-
-            if (!response.ok) {
-              throw new Error(`HTTP ${response.status}`);
-            }
-
-            const data = await response.json();
-            if (!isUsableSummary(data)) {
+            const summary = await fetchRandomFact();
+            if (!isUsableSummary(summary)) {
               // Retry once for clean random summary
               return loadNextFact();
             }
-
-            renderFact(data, '');
+            renderFact(summary, '');
           }
         } catch (error) {
           if (error.message === 'NO_FACTS_FOUND') {
@@ -1301,16 +1359,7 @@
         setLoadingState(true);
 
         try {
-          const endpoint = `${SPECIFIC_API_URL}${encodeURIComponent(title)}`;
-          const response = await fetch(endpoint, {
-            headers: { 'Accept': 'application/json' }
-          });
-
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-          }
-
-          const data = await response.json();
+          const data = await fetchSummaryByTitle(title);
           renderFact(data, topicLabel);
         } catch (error) {
           // If specific fact fails, fall back to next fact or error
