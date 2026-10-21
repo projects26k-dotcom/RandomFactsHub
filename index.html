@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Random Facts Generator – RandomFactsHub</title>
-  <meta name="description" content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
-  <link rel="canonical" href="https://randomfactshub.com/">
+  <meta name="description"
+    content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
+  <link rel="canonical" href="https://randomfacthub.vercel.app/">
 
   <!-- Favicons -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -13,20 +15,24 @@
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://randomfactshub.com/">
+  <meta property="og:url" content="https://randomfacthub.vercel.app/">
   <meta property="og:site_name" content="RandomFactsHub">
   <meta property="og:title" content="Random Facts Generator – RandomFactsHub">
-  <meta property="og:description" content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
+  <meta property="og:description"
+    content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Random Facts Generator – RandomFactsHub">
-  <meta name="twitter:description" content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
+  <meta name="twitter:description"
+    content="Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub.">
 
   <!-- Google Fonts: Playfair Display for elegant serif titles & Plus Jakarta Sans for UI/extract -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -34,7 +40,7 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "RandomFactsHub",
-    "url": "https://randomfactshub.com/",
+    "url": "https://randomfacthub.vercel.app/",
     "description": "Get instant random facts on science, history, nature, technology and more. Pick a topic, learn something new. Free random fact generator by RandomFactsHub."
   }
   </script>
@@ -80,7 +86,9 @@
     }
 
     /* Reset & Base */
-    *, *::before, *::after {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
@@ -253,9 +261,9 @@
       gap: 0.65rem;
       box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.35);
       transition: transform 0.18s cubic-bezier(0.4, 0, 0.2, 1),
-                  box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1),
-                  background-color 0.18s ease,
-                  opacity 0.18s ease;
+        box-shadow 0.18s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.18s ease,
+        opacity 0.18s ease;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
     }
@@ -307,7 +315,9 @@
     }
 
     @keyframes spin {
-      to { transform: rotate(360deg); }
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .keyboard-hint {
@@ -366,6 +376,7 @@
         opacity: 0;
         transform: translateY(14px) scale(0.99);
       }
+
       100% {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -496,7 +507,8 @@
     }
 
     .fact-extract {
-      font-size: 1.125rem; /* 18px */
+      font-size: 1.125rem;
+      /* 18px */
       line-height: 1.7;
       color: var(--text-secondary);
       max-width: 650px;
@@ -546,20 +558,23 @@
     }
 
     .shimmer {
-      background: linear-gradient(
-        90deg,
-        var(--skeleton-base) 0%,
-        var(--skeleton-shine) 50%,
-        var(--skeleton-base) 100%
-      );
+      background: linear-gradient(90deg,
+          var(--skeleton-base) 0%,
+          var(--skeleton-shine) 50%,
+          var(--skeleton-base) 100%);
       background-size: 200% 100%;
       animation: shimmerWave 1.4s infinite linear;
       border-radius: 6px;
     }
 
     @keyframes shimmerWave {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
     }
 
     .skeleton-image {
@@ -614,8 +629,13 @@
       height: 16px;
     }
 
-    .skeleton-line.mid { width: 92%; }
-    .skeleton-line.short { width: 68%; }
+    .skeleton-line.mid {
+      width: 92%;
+    }
+
+    .skeleton-line.short {
+      width: 68%;
+    }
 
     .skeleton-link {
       width: 170px;
@@ -760,6 +780,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Minimal Semantic Header with Topic Selector -->
@@ -775,7 +796,8 @@
         <select id="topic-select" class="topic-select" aria-label="Choose a topic">
           <option value="">🎲 Any topic (Random)</option>
         </select>
-        <svg class="select-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="select-chevron" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
       </div>
@@ -787,8 +809,9 @@
     <!-- Big Action Button -->
     <div class="action-container">
       <button id="next-fact-btn" class="primary-btn" type="button" aria-label="Show me a fact">
-        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+        <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
         </svg>
         <span class="btn-spinner" aria-hidden="true"></span>
         <span id="btn-text">Show me a fact</span>
@@ -798,7 +821,7 @@
 
     <!-- Live Fact Area -->
     <div class="fact-area" aria-live="polite">
-      
+
       <!-- Skeleton Shimmer Placeholder -->
       <div id="skeleton-card" class="skeleton-card" aria-hidden="true">
         <div class="shimmer skeleton-image"></div>
@@ -827,8 +850,11 @@
         <div class="card-content">
           <div class="card-topbar">
             <span id="fact-tag" class="fact-tag">Wikipedia Fact</span>
-            <button id="copy-btn" class="copy-btn" type="button" aria-label="Copy link to this fact" title="Copy link to this fact">
-              <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <button id="copy-btn" class="copy-btn" type="button" aria-label="Copy link to this fact"
+              title="Copy link to this fact">
+              <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
@@ -846,8 +872,10 @@
           <div>
             <a id="fact-wiki-link" class="card-footer-link" href="#" target="_blank" rel="noopener">
               <span>Read more on Wikipedia</span>
-              <svg class="link-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h14M12 5l7 7-7 7"/>
+              <svg class="link-arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+                aria-hidden="true">
+                <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </a>
           </div>
@@ -856,7 +884,8 @@
 
       <!-- Error State Card -->
       <div id="error-card" class="error-card" role="alert">
-        <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="8" x2="12" y2="12"></line>
           <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -870,7 +899,9 @@
     <!-- Visible Subtle SEO Text Block -->
     <section class="seo-intro" aria-label="About RandomFactsHub">
       <p>
-        RandomFactsHub is your daily gateway to discover unexpected <strong>random facts</strong>, explore curated <strong>facts by topic</strong>, and learn captivating <strong>interesting facts</strong> straight from Wikipedia. Choose a topic or wander freely through unexpected rabbit holes one click at a time.
+        RandomFactsHub is your daily gateway to discover unexpected <strong>random facts</strong>, explore curated
+        <strong>facts by topic</strong>, and learn captivating <strong>interesting facts</strong> straight from
+        Wikipedia. Choose a topic or wander freely through unexpected rabbit holes one click at a time.
       </p>
     </section>
   </main>
@@ -878,7 +909,8 @@
   <!-- Semantic Footer with Mandatory Attribution and Disclaimers -->
   <footer class="app-footer">
     <p>
-      Content from <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a>, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
+      Content from <a href="https://www.wikipedia.org" target="_blank" rel="noopener">Wikipedia</a>, licensed under <a
+        href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>.
     </p>
     <p class="disclaimer">RandomFactsHub is not affiliated with Wikipedia or the Wikimedia Foundation.</p>
   </footer>
@@ -1593,4 +1625,5 @@
     })();
   </script>
 </body>
+
 </html>
