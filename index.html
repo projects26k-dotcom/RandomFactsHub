@@ -422,21 +422,18 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
+      gap: 0.75rem;
+      flex-wrap: wrap;
     }
 
-    .fact-tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-      background-color: var(--accent-light);
-      padding: 0.25rem 0.65rem;
-      border-radius: 9999px;
-      border: 1px solid var(--accent-light-border);
+    .card-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
 
+    .action-btn,
     .copy-btn {
       background: transparent;
       color: var(--text-muted);
@@ -451,31 +448,65 @@
       align-items: center;
       gap: 0.4rem;
       transition: all 0.2s ease;
+      user-select: none;
     }
 
-    .copy-btn:hover {
+    .action-btn:hover:not(:disabled),
+    .copy-btn:hover:not(:disabled) {
       background: var(--accent-light);
       color: var(--accent);
       border-color: var(--accent-light-border);
     }
 
-    .copy-btn.copied {
+    .action-btn:disabled,
+    .copy-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .action-btn.copied,
+    .copy-btn.copied,
+    .action-btn.download-success {
       background: #ecfdf5;
       color: #059669;
       border-color: #a7f3d0;
     }
 
     @media (prefers-color-scheme: dark) {
-      .copy-btn.copied {
+      .action-btn.copied,
+      .copy-btn.copied,
+      .action-btn.download-success {
         background: rgba(16, 185, 129, 0.15);
         color: #34d399;
         border-color: rgba(16, 185, 129, 0.3);
       }
     }
 
-    .copy-icon {
+    .action-icon,
+    .copy-icon,
+    .download-icon {
       width: 14px;
       height: 14px;
+      flex-shrink: 0;
+    }
+
+    .action-spinner {
+      display: none;
+      width: 13px;
+      height: 13px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .download-btn.is-loading .action-spinner {
+      display: inline-block;
+    }
+
+    .download-btn.is-loading .download-icon {
+      display: none;
     }
 
     /* Typography */
@@ -594,6 +625,14 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .skeleton-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .skeleton-pill {
@@ -752,6 +791,25 @@
         max-width: 100%;
       }
 
+      .card-topbar,
+      .skeleton-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .card-actions,
+      .skeleton-actions {
+        width: 100%;
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .action-btn {
+        flex: 1;
+        justify-content: center;
+      }
+
       .card-content,
       .skeleton-body {
         padding: 1.5rem 1.25rem 1.75rem;
@@ -828,7 +886,10 @@
         <div class="skeleton-body">
           <div class="skeleton-topbar">
             <div class="shimmer skeleton-pill"></div>
-            <div class="shimmer skeleton-btn"></div>
+            <div class="skeleton-actions">
+              <div class="shimmer skeleton-btn"></div>
+              <div class="shimmer skeleton-btn"></div>
+            </div>
           </div>
           <div class="shimmer skeleton-title-1"></div>
           <div class="shimmer skeleton-title-2"></div>
@@ -850,16 +911,24 @@
         <div class="card-content">
           <div class="card-topbar">
             <span id="fact-tag" class="fact-tag">Wikipedia Fact</span>
-            <button id="copy-btn" class="copy-btn" type="button" aria-label="Copy link to this fact"
-              title="Copy link to this fact">
-              <svg class="copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                aria-hidden="true">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-              </svg>
-              <span id="copy-text">Copy link</span>
-            </button>
+            <div class="card-actions">
+              <button id="copy-btn" class="action-btn copy-btn" type="button" aria-label="Copy link to this fact" title="Copy link to this fact">
+                <svg class="action-icon copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copy-text">Copy link</span>
+              </button>
+              <button id="download-pdf-btn" class="action-btn download-btn" type="button" aria-label="Download fact in PDF with image" title="Download fact in PDF with image">
+                <svg class="action-icon download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span class="action-spinner" aria-hidden="true"></span>
+                <span id="download-text">Download PDF</span>
+              </button>
+            </div>
           </div>
 
           <div class="card-header-text">
@@ -914,6 +983,20 @@
     </p>
     <p class="disclaimer">RandomFactsHub is not affiliated with Wikipedia or the Wikimedia Foundation.</p>
   </footer>
+
+  <!-- PDF Generation Dependencies (local with CDN fallback) -->
+  <script src="vendor/html2canvas.min.js"></script>
+  <script>
+    if (!window.html2canvas) {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\\/script>');
+    }
+  </script>
+  <script src="vendor/jspdf.umd.min.js"></script>
+  <script>
+    if (!window.jspdf && !window.jsPDF) {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\\/script>');
+    }
+  </script>
 
   <script>
     (function () {
@@ -1082,6 +1165,8 @@
       const retryBtn = document.getElementById('retry-btn');
       const copyBtn = document.getElementById('copy-btn');
       const copyText = document.getElementById('copy-text');
+      const downloadBtn = document.getElementById('download-pdf-btn');
+      const downloadText = document.getElementById('download-text');
       const skeletonCard = document.getElementById('skeleton-card');
       const factCard = document.getElementById('fact-card');
       const errorCard = document.getElementById('error-card');
@@ -1096,8 +1181,11 @@
 
       let currentFactTitle = '';
       let currentTopicLabel = '';
+      let currentFactData = null;
       let isLoading = false;
+      let isGeneratingPdf = false;
       let copyTimeoutId = null;
+      let downloadTimeoutId = null;
 
       // Wikipedia API Endpoints (Action API with origin=* resolves CORS on all domains)
       const WIKI_ACTION_API = 'https://en.wikipedia.org/w/api.php';
@@ -1166,6 +1254,7 @@
       }
 
       function renderFact(data, topicLabel) {
+        currentFactData = data;
         currentFactTitle = data.title || '';
         currentTopicLabel = topicLabel || '';
 
@@ -1507,6 +1596,297 @@
         }
       }
 
+      // Safe HTML escaping for PDF template strings
+      function escapeHtml(str) {
+        return (str || '')
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // Preload image and convert to Base64 data URL to prevent CORS/rendering delays
+      async function fetchImageAsBase64(url) {
+        if (!url) return null;
+        try {
+          const res = await fetch(url, { mode: 'cors' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const blob = await res.blob();
+          return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        } catch (err) {
+          console.warn('Could not load image as base64 for PDF:', err);
+          return null;
+        }
+      }
+
+      // Download Fact as PDF with Site Name, Image, and Structured Markdown
+      async function handleDownloadPDF() {
+        if (!currentFactData || isLoading || isGeneratingPdf) return;
+
+        // Verify dependencies
+        const hasHtml2Canvas = typeof window.html2canvas === 'function';
+        const hasJsPdf = (window.jspdf && typeof window.jspdf.jsPDF === 'function') || (typeof window.jsPDF === 'function');
+
+        if (!hasHtml2Canvas || !hasJsPdf) {
+          alert('PDF generation library is loading, please try again in a moment.');
+          return;
+        }
+
+        isGeneratingPdf = true;
+        downloadBtn.disabled = true;
+        downloadBtn.classList.add('is-loading');
+        downloadText.textContent = 'Preparing PDF...';
+
+        try {
+          const title = currentFactData.title || currentFactTitle || 'Untitled Fact';
+          const description = (currentFactData.description || '').trim();
+          const extract = (currentFactData.extract || '').trim();
+          const topic = currentTopicLabel || 'Wikipedia Fact';
+          const wikiUrl = (currentFactData.content_urls && currentFactData.content_urls.desktop && currentFactData.content_urls.desktop.page)
+            ? currentFactData.content_urls.desktop.page
+            : `https://en.wikipedia.org/wiki/${encodeURIComponent(title)}`;
+
+          const shareUrl = new URL(window.location.origin + window.location.pathname);
+          if (currentTopicLabel) {
+            shareUrl.searchParams.set('topic', currentTopicLabel);
+          }
+          shareUrl.searchParams.set('fact', title);
+
+          // Get image source (if available)
+          const rawImageUrl = (currentFactData.thumbnail && currentFactData.thumbnail.source)
+            || (currentFactData.originalimage && currentFactData.originalimage.source)
+            || (factImg.src && factImg.src.startsWith('http') ? factImg.src : null);
+
+          let base64Image = null;
+          if (rawImageUrl) {
+            downloadText.textContent = 'Loading image...';
+            base64Image = await fetchImageAsBase64(rawImageUrl);
+          }
+
+          downloadText.textContent = 'Structuring layout...';
+
+          // Current date
+          const now = new Date();
+          const formattedDate = now.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+
+
+
+          // Construct offscreen render element
+          const renderContainer = document.createElement('div');
+          renderContainer.id = 'pdf-export-container';
+          renderContainer.style.cssText = `
+            width: 794px;
+            background-color: #ffffff;
+            color: #0f172a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 44px 48px;
+            box-sizing: border-box;
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            z-index: -999;
+          `;
+
+          // Generate HTML inside the container
+          renderContainer.innerHTML = `
+            <!-- Header with Site Name at Top -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; padding-bottom: 16px; border-bottom: 2px solid #e2e8f0; margin-bottom: 22px;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #4f46e5;"></span>
+                  <span style="font-family: Georgia, serif; font-size: 26px; font-weight: 700; color: #0f172a; letter-spacing: -0.02em;">RandomFactsHub</span>
+                </div>
+                <div style="font-size: 11.5px; color: #64748b; font-weight: 500; margin-top: 4px; letter-spacing: 0.02em;">
+                  Instant Curated Facts & Daily Knowledge Hub
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 12px; font-weight: 700; color: #4f46e5;">randomfactshub.com</div>
+                <div style="font-size: 11px; color: #94a3b8; margin-top: 3px;">${escapeHtml(formattedDate)}</div>
+              </div>
+            </div>
+
+            <!-- Topic Tag -->
+            <div style="margin-bottom: 12px;">
+              <span style="display: inline-block; background-color: #eef2ff; color: #4338ca; border: 1px solid #c7d2fe; padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;">
+                ${escapeHtml(topic)}
+              </span>
+            </div>
+
+            <!-- Fact Title (# Title) -->
+            <h1 style="font-family: Georgia, serif; font-size: 27px; line-height: 1.25; font-weight: 700; color: #0f172a; margin: 0 0 10px 0; letter-spacing: -0.01em;">
+              ${escapeHtml(title)}
+            </h1>
+
+            <!-- Description (> Blockquote) -->
+            ${description ? `
+            <div style="border-left: 4px solid #4f46e5; background-color: #f8fafc; padding: 10px 16px; border-radius: 0 8px 8px 0; margin-bottom: 20px; font-style: italic; color: #475569; font-size: 13.5px; line-height: 1.5;">
+              &ldquo;${escapeHtml(description)}&rdquo;
+            </div>
+            ` : ''}
+
+            <!-- Image with Frame & Caption -->
+            ${base64Image ? `
+            <div style="margin-bottom: 22px; text-align: center; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px; overflow: hidden;">
+              <img id="pdf-fact-image" src="${base64Image}" alt="${escapeHtml(title)}" style="max-height: 250px; max-width: 100%; height: auto; object-fit: contain; border-radius: 8px; display: block; margin: 0 auto; box-shadow: 0 2px 8px rgba(0,0,0,0.06);" />
+              <div style="margin-top: 8px; font-size: 11px; color: #64748b; font-style: italic;">
+                Illustration: ${escapeHtml(title)} (via Wikimedia Commons)
+              </div>
+            </div>
+            ` : ''}
+
+            <!-- Extract Story Body -->
+            <div style="margin-bottom: 22px;">
+              <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px;">
+                Fact Summary
+              </div>
+              <div style="font-size: 13.5px; line-height: 1.65; color: #1e293b; text-align: justify;">
+                ${escapeHtml(extract)}
+              </div>
+            </div>
+
+            <!-- Structured Metadata Specs Table -->
+            <div style="margin-bottom: 20px; border: 1px solid #e2e8f0; border-radius: 10px; background-color: #f8fafc; padding: 14px 18px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px;">
+                <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #334155;">Structured Information</span>
+                <span style="font-size: 10px; color: #4f46e5; background: #eef2ff; border: 1px solid #c7d2fe; padding: 2px 7px; border-radius: 4px; font-weight: 700;">FACT METADATA</span>
+              </div>
+              <table style="width: 100%; border-collapse: collapse; font-size: 11.5px;">
+                <tbody>
+                  <tr>
+                    <td style="padding: 4px 8px 4px 0; font-weight: 600; color: #64748b; width: 140px; vertical-align: top;">Topic:</td>
+                    <td style="padding: 4px 0; color: #0f172a; font-weight: 500;">${escapeHtml(topic)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 8px 4px 0; font-weight: 600; color: #64748b; vertical-align: top;">Primary Subject:</td>
+                    <td style="padding: 4px 0; color: #0f172a;">${escapeHtml(title)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 8px 4px 0; font-weight: 600; color: #64748b; vertical-align: top;">Content Source:</td>
+                    <td style="padding: 4px 0; color: #0f172a;">Wikipedia Encyclopedia (CC BY-SA 4.0)</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 8px 4px 0; font-weight: 600; color: #64748b; vertical-align: top;">Wikipedia URL:</td>
+                    <td style="padding: 4px 0; color: #4f46e5; word-break: break-all;">${escapeHtml(wikiUrl)}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 4px 8px 4px 0; font-weight: 600; color: #64748b; vertical-align: top;">Direct Hub Link:</td>
+                    <td style="padding: 4px 0; color: #4f46e5; word-break: break-all;">${escapeHtml(shareUrl.toString())}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+
+            <!-- Footer -->
+            <div style="border-top: 1px solid #e2e8f0; padding-top: 14px; display: flex; justify-content: space-between; align-items: center; font-size: 10.5px; color: #94a3b8;">
+              <div>
+                Text & Media from Wikipedia • Licensed under <strong style="color: #64748b;">CC BY-SA 4.0</strong>
+              </div>
+              <div>
+                Downloaded from <strong style="color: #4f46e5;">RandomFactsHub.com</strong>
+              </div>
+            </div>
+          `;
+
+          document.body.appendChild(renderContainer);
+
+          downloadText.textContent = 'Rendering PDF...';
+
+          // Ensure any image inside has finished rendering
+          const imgEl = renderContainer.querySelector('#pdf-fact-image');
+          if (imgEl && !imgEl.complete) {
+            await new Promise(r => {
+              imgEl.onload = r;
+              imgEl.onerror = r;
+              setTimeout(r, 1200); // safety fallback timeout
+            });
+          }
+
+          // Render canvas with html2canvas
+          const canvas = await window.html2canvas(renderContainer, {
+            scale: 2, // 2x crispness
+            useCORS: true,
+            allowTaint: false,
+            backgroundColor: '#ffffff',
+            logging: false
+          });
+
+          // Remove the temporary offscreen element
+          document.body.removeChild(renderContainer);
+
+          // Build PDF
+          const jsPDFConstructor = (window.jspdf && window.jspdf.jsPDF) ? window.jspdf.jsPDF : window.jsPDF;
+          const pdf = new jsPDFConstructor({
+            orientation: 'portrait',
+            unit: 'mm',
+            format: 'a4'
+          });
+
+          const pageWidth = pdf.internal.pageSize.getWidth(); // 210mm
+          const pageHeight = pdf.internal.pageSize.getHeight(); // 297mm
+
+          const imgData = canvas.toDataURL('image/jpeg', 0.95);
+          const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+          let heightLeft = imgHeight;
+          let position = 0;
+
+          // First page
+          pdf.addImage(imgData, 'JPEG', 0, position, pageWidth, imgHeight);
+          heightLeft -= pageHeight;
+
+          // Subsequent pages if content is long
+          while (heightLeft > 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'JPEG', 0, position, pageWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          // Trigger download
+          const sanitizedFilename = (title || 'fact')
+            .replace(/[^a-zA-Z0-9_-]/g, '_')
+            .replace(/_+/g, '_')
+            .substring(0, 45);
+          pdf.save(`${sanitizedFilename}-RandomFactsHub.pdf`);
+
+          // Show success feedback
+          downloadBtn.classList.remove('is-loading');
+          downloadBtn.classList.add('download-success');
+          downloadText.textContent = 'PDF Downloaded!';
+
+          if (downloadTimeoutId) clearTimeout(downloadTimeoutId);
+          downloadTimeoutId = setTimeout(() => {
+            downloadBtn.classList.remove('download-success');
+            downloadText.textContent = 'Download PDF';
+            downloadBtn.disabled = false;
+            isGeneratingPdf = false;
+          }, 2500);
+
+        } catch (error) {
+          console.error('Failed to generate PDF:', error);
+          downloadBtn.classList.remove('is-loading');
+          downloadText.textContent = 'Failed. Try again';
+          setTimeout(() => {
+            downloadText.textContent = 'Download PDF';
+            downloadBtn.disabled = false;
+            isGeneratingPdf = false;
+          }, 2500);
+        }
+      }
+
       // Event Listeners
       nextBtn.addEventListener('click', () => {
         if (!isLoading) {
@@ -1521,6 +1901,7 @@
       });
 
       copyBtn.addEventListener('click', handleCopyLink);
+      downloadBtn.addEventListener('click', handleDownloadPDF);
 
       // Topic selector change: immediately load a random fact from that topic
       topicSelect.addEventListener('change', () => {
@@ -1544,8 +1925,11 @@
         }
 
         if (e.code === 'Space' || e.key === ' ' || e.key === 'ArrowRight') {
-          // If copy button or retry button is actively focused, allow standard button activation
+          // If copy button, download button, or retry button is actively focused, allow standard button activation
           if (document.activeElement === copyBtn && (e.code === 'Space' || e.key === ' ')) {
+            return;
+          }
+          if (document.activeElement === downloadBtn && (e.code === 'Space' || e.key === ' ')) {
             return;
           }
           if (document.activeElement === retryBtn && (e.code === 'Space' || e.key === ' ')) {
