@@ -1033,45 +1033,15 @@
       color: var(--text-muted);
     }
 
-    .theme-pills {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    .theme-pill {
-      font-family: var(--font-sans);
-      font-size: 0.74rem;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 9999px;
-      border: 1px solid var(--card-border);
-      background: transparent;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: all 0.18s ease;
-    }
-
-    .theme-pill:hover {
-      color: var(--text-primary);
-      border-color: var(--accent);
-    }
-
-    .theme-pill.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
-    }
-
     /* The Renderable Card (1:1 Aspect Ratio) */
     .post-graphic-viewport {
       width: 100%;
       aspect-ratio: 1 / 1;
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
       position: relative;
-      background: #0f172a;
+      background: #090d16;
     }
 
     .post-graphic-card {
@@ -1079,12 +1049,9 @@
       height: 100%;
       position: relative;
       box-sizing: border-box;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
       overflow: hidden;
       user-select: none;
+      background: #090d16;
     }
 
     .post-graphic-bg {
@@ -1094,13 +1061,29 @@
       background-position: center;
       background-repeat: no-repeat;
       z-index: 0;
-      transition: transform 0.4s ease;
+      opacity: 1;
+      transition: opacity 0.3s ease;
     }
 
     .post-graphic-overlay {
       position: absolute;
       inset: 0;
       z-index: 1;
+      pointer-events: none;
+      transition: background 0.3s ease;
+    }
+
+    /* Layout Scrims: dark gradient from text side (~0.65 opacity) */
+    .post-graphic-card.layout-bottom .post-graphic-overlay {
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.15) 75%, transparent 100%);
+    }
+
+    .post-graphic-card.layout-top .post-graphic-overlay {
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.92) 0%, rgba(0, 0, 0, 0.65) 45%, rgba(0, 0, 0, 0.15) 75%, transparent 100%);
+    }
+
+    .post-graphic-card.layout-left .post-graphic-overlay {
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.70) 55%, rgba(0, 0, 0, 0.20) 80%, transparent 100%);
     }
 
     .post-graphic-inner {
@@ -1108,453 +1091,136 @@
       z-index: 2;
       width: 100%;
       height: 100%;
+      box-sizing: border-box;
+      padding: 30px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
 
-    /* Badge: Did You Know? */
-    .post-top-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .post-graphic-card.layout-bottom .post-graphic-inner {
+      justify-content: flex-end;
+    }
+
+    .post-graphic-card.layout-top .post-graphic-inner {
+      justify-content: flex-start;
+    }
+
+    .post-graphic-card.layout-left .post-graphic-inner {
+      justify-content: center;
+      max-width: 82%;
+    }
+
+    .post-badge-row {
+      margin-bottom: 8px;
     }
 
     .post-did-you-know-badge {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      font-size: 1.05rem;
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
       font-weight: 800;
-      letter-spacing: -0.01em;
-      padding: 5px 16px;
-      border-radius: 4px 16px 4px 14px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-      transform: rotate(-2.5deg);
-      transform-origin: left center;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      color: #0f172a;
+      background: #f4b942;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
-    .badge-bulb {
-      font-size: 1.25rem;
-      line-height: 1;
-    }
-
-    /* Title Group */
     .post-title-wrapper {
-      margin-top: 8px;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
 
     .post-hook-title {
-      font-size: 2.2rem;
-      line-height: 1.1;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.1rem;
+      line-height: 1.15;
+      font-weight: 700;
+      color: #ffffff;
       margin: 0;
-      letter-spacing: -0.02em;
-      transform: rotate(-1deg);
-      transform-origin: left center;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.85);
+      word-break: break-word;
+    }
+
+    .post-title-underline {
+      height: 3px;
+      width: 48px;
+      border-radius: 2px;
+      background: #f4b942;
+      margin-top: 8px;
+      margin-bottom: 6px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+      transition: background 0.2s ease;
     }
 
     .post-subtitle {
-      font-size: 1.7rem;
-      font-weight: 700;
-      margin-top: 2px;
-      transform: rotate(0.5deg);
-      transform-origin: left center;
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin: 0;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
     }
 
-    /* Main Bullet Point */
-    .post-did-you-know-box {
+    .post-fact-content {
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      max-width: 84%;
-      margin-bottom: 8px;
-    }
-
-    .post-bullet-emoji {
-      font-size: 1.35rem;
-      line-height: 1.2;
-      flex-shrink: 0;
+      flex-direction: column;
+      gap: 6px;
     }
 
     .post-did-you-know-text {
       margin: 0;
       font-family: var(--font-sans);
-      font-size: 0.96rem;
+      font-size: 0.98rem;
       line-height: 1.45;
-      font-weight: 600;
-    }
-
-    /* Fun Fact Callout */
-    .post-fun-fact-container {
-      position: relative;
-      max-width: 80%;
-      margin-top: 4px;
-      z-index: 2;
-    }
-
-    .post-fun-fact-ribbon {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: 0.05em;
-      padding: 4px 12px;
-      border-radius: 4px 12px 2px 10px;
-      transform: rotate(-2deg);
-      margin-bottom: -7px;
-      position: relative;
-      z-index: 3;
-    }
-
-    .star-icon {
-      font-size: 0.95rem;
-      line-height: 1;
-    }
-
-    .post-fun-fact-card {
-      border-radius: 12px;
-      padding: 14px 16px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-      position: relative;
-      z-index: 2;
-    }
-
-    .post-fun-fact-text {
-      margin: 0;
-      font-family: var(--font-sans);
-      font-size: 0.92rem;
-      line-height: 1.42;
-      font-weight: 600;
-    }
-
-    /* Sticker Group */
-    .post-sticker-group {
-      position: absolute;
-      right: 12px;
-      bottom: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      z-index: 3;
-      pointer-events: none;
-    }
-
-    .post-sticker-quote-bubble {
-      font-family: 'Caveat', cursive, sans-serif;
-      font-size: 1.3rem;
-      font-weight: 700;
-      transform: rotate(6deg);
-      text-align: center;
-      max-width: 130px;
-      line-height: 1.15;
-      margin-bottom: 6px;
-    }
-
-    .post-vinyl-sticker {
-      width: 105px;
-      height: 105px;
-      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
-      transform: rotate(-12deg);
-    }
-
-    .vinyl-svg {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Bottom Waves */
-    .post-bottom-waves {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 52px;
-      pointer-events: none;
-      z-index: 1;
+      font-weight: 500;
+      color: #ffffff;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
       overflow: hidden;
     }
 
-    .wave-svg {
-      width: 100%;
-      height: 100%;
-      display: block;
+    .post-fun-fact-line {
+      margin: 0;
+      font-family: var(--font-sans);
+      font-size: 0.86rem;
+      line-height: 1.38;
+      font-weight: 600;
+      color: #f1f5f9;
+      opacity: 0.95;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9);
     }
 
     .post-watermark {
       position: absolute;
-      bottom: 10px;
-      left: 18px;
       z-index: 3;
       font-family: var(--font-sans);
-      font-size: 0.72rem;
-      font-weight: 700;
-      color: #ffffff;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      opacity: 0.95;
+      font-size: 0.70rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.7);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+      pointer-events: none;
     }
 
-    .watermark-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
+    .post-graphic-card.layout-bottom .post-watermark {
+      top: 18px;
+      right: 22px;
     }
 
-    /* THEME 1: RETRO POP (Inspired by reference image) */
-    .post-graphic-card.theme-retro {
-      background: #18181b;
-    }
-    .post-graphic-card.theme-retro .post-graphic-overlay {
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.82) 0%, rgba(15, 23, 42, 0.58) 45%, rgba(15, 23, 42, 0.92) 100%);
-    }
-    .post-graphic-card.theme-retro .post-did-you-know-badge {
-      background: #facc15;
-      color: #0f172a;
-    }
-    .post-graphic-card.theme-retro .post-hook-title {
-      font-family: 'Pacifico', cursive, sans-serif;
-      color: #ffffff;
-      text-shadow: 0 4px 14px rgba(0, 0, 0, 0.7);
-    }
-    .post-graphic-card.theme-retro .post-subtitle {
-      font-family: 'Caveat', cursive, sans-serif;
-      color: #fb7185;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-    }
-    .post-graphic-card.theme-retro .post-did-you-know-text {
-      color: #ffffff;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
-    }
-    .post-graphic-card.theme-retro .post-fun-fact-ribbon {
-      background: #f43f5e;
-      color: #ffffff;
-      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.45);
-    }
-    .post-graphic-card.theme-retro .post-fun-fact-card {
-      background: #fffdf5;
-      color: #1e293b;
-      border: 2px solid #fef3c7;
-    }
-    .post-graphic-card.theme-retro .post-sticker-quote-bubble {
-      color: #fbbf24;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
-    }
-    .post-graphic-card.theme-retro .wave-layer-1 {
-      fill: #f43f5e;
-      opacity: 0.88;
-    }
-    .post-graphic-card.theme-retro .wave-layer-2 {
-      fill: #facc15;
-      opacity: 0.95;
-    }
-    .post-graphic-card.theme-retro .watermark-dot {
-      background: #facc15;
+    .post-graphic-card.layout-top .post-watermark {
+      bottom: 18px;
+      right: 22px;
     }
 
-    /* THEME 2: COSMIC GALAXY */
-    .post-graphic-card.theme-cosmic {
-      background: #090d16;
-    }
-    .post-graphic-card.theme-cosmic .post-graphic-overlay {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.90) 0%, rgba(49, 46, 129, 0.70) 50%, rgba(15, 23, 42, 0.95) 100%);
-    }
-    .post-graphic-card.theme-cosmic .post-did-you-know-badge {
-      background: #38bdf8;
-      color: #0f172a;
-    }
-    .post-graphic-card.theme-cosmic .post-hook-title {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      color: #f8fafc;
-      text-shadow: 0 4px 16px rgba(56, 189, 248, 0.35);
-    }
-    .post-graphic-card.theme-cosmic .post-subtitle {
-      font-family: var(--font-sans);
-      color: #a78bfa;
-      font-weight: 700;
-      font-size: 1.35rem;
-    }
-    .post-graphic-card.theme-cosmic .post-did-you-know-text {
-      color: #e2e8f0;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
-    }
-    .post-graphic-card.theme-cosmic .post-fun-fact-ribbon {
-      background: #8b5cf6;
-      color: #ffffff;
-      box-shadow: 0 4px 14px rgba(139, 92, 246, 0.5);
-    }
-    .post-graphic-card.theme-cosmic .post-fun-fact-card {
-      background: rgba(15, 23, 42, 0.9);
-      color: #f1f5f9;
-      border: 1.5px solid rgba(139, 92, 246, 0.5);
-      backdrop-filter: blur(8px);
-    }
-    .post-graphic-card.theme-cosmic .post-sticker-quote-bubble {
-      color: #38bdf8;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-    }
-    .post-graphic-card.theme-cosmic .wave-layer-1 {
-      fill: #8b5cf6;
-      opacity: 0.85;
-    }
-    .post-graphic-card.theme-cosmic .wave-layer-2 {
-      fill: #38bdf8;
-      opacity: 0.92;
-    }
-    .post-graphic-card.theme-cosmic .watermark-dot {
-      background: #38bdf8;
-    }
-
-    /* THEME 3: CYBER NEON */
-    .post-graphic-card.theme-cyber {
-      background: #050505;
-    }
-    .post-graphic-card.theme-cyber .post-graphic-overlay {
-      background: linear-gradient(145deg, rgba(10, 10, 15, 0.92) 0%, rgba(88, 28, 135, 0.65) 50%, rgba(10, 10, 15, 0.96) 100%);
-    }
-    .post-graphic-card.theme-cyber .post-did-you-know-badge {
-      background: #22d3ee;
-      color: #050505;
-    }
-    .post-graphic-card.theme-cyber .post-hook-title {
-      font-family: 'Shrikhand', cursive, sans-serif;
-      color: #f43f5e;
-      text-shadow: 0 0 20px rgba(244, 63, 94, 0.6);
-    }
-    .post-graphic-card.theme-cyber .post-subtitle {
-      font-family: var(--font-sans);
-      color: #22d3ee;
-      font-weight: 800;
-      font-size: 1.3rem;
-    }
-    .post-graphic-card.theme-cyber .post-did-you-know-text {
-      color: #f1f5f9;
-    }
-    .post-graphic-card.theme-cyber .post-fun-fact-ribbon {
-      background: #ec4899;
-      color: #ffffff;
-      box-shadow: 0 0 15px rgba(236, 72, 153, 0.6);
-    }
-    .post-graphic-card.theme-cyber .post-fun-fact-card {
-      background: rgba(17, 24, 39, 0.92);
-      color: #f9fafb;
-      border: 1.5px solid #ec4899;
-    }
-    .post-graphic-card.theme-cyber .post-sticker-quote-bubble {
-      color: #22d3ee;
-    }
-    .post-graphic-card.theme-cyber .wave-layer-1 {
-      fill: #ec4899;
-      opacity: 0.9;
-    }
-    .post-graphic-card.theme-cyber .wave-layer-2 {
-      fill: #22d3ee;
-      opacity: 0.9;
-    }
-    .post-graphic-card.theme-cyber .watermark-dot {
-      background: #22d3ee;
-    }
-
-    /* THEME 4: EMERALD NATURE */
-    .post-graphic-card.theme-nature {
-      background: #06241b;
-    }
-    .post-graphic-card.theme-nature .post-graphic-overlay {
-      background: linear-gradient(180deg, rgba(6, 36, 27, 0.88) 0%, rgba(6, 78, 59, 0.60) 45%, rgba(6, 36, 27, 0.94) 100%);
-    }
-    .post-graphic-card.theme-nature .post-did-you-know-badge {
-      background: #34d399;
-      color: #06241b;
-    }
-    .post-graphic-card.theme-nature .post-hook-title {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      color: #ecfdf5;
-    }
-    .post-graphic-card.theme-nature .post-subtitle {
-      font-family: 'Caveat', cursive, sans-serif;
-      color: #fbbf24;
-      font-size: 1.7rem;
-    }
-    .post-graphic-card.theme-nature .post-did-you-know-text {
-      color: #e6fcf5;
-    }
-    .post-graphic-card.theme-nature .post-fun-fact-ribbon {
-      background: #059669;
-      color: #ffffff;
-    }
-    .post-graphic-card.theme-nature .post-fun-fact-card {
-      background: #f0fdf4;
-      color: #064e3b;
-      border: 2px solid #a7f3d0;
-    }
-    .post-graphic-card.theme-nature .post-sticker-quote-bubble {
-      color: #fbbf24;
-    }
-    .post-graphic-card.theme-nature .wave-layer-1 {
-      fill: #059669;
-      opacity: 0.85;
-    }
-    .post-graphic-card.theme-nature .wave-layer-2 {
-      fill: #34d399;
-      opacity: 0.95;
-    }
-    .post-graphic-card.theme-nature .watermark-dot {
-      background: #34d399;
-    }
-
-    /* THEME 5: SLEEK SLATE */
-    .post-graphic-card.theme-slate {
-      background: #0f172a;
-    }
-    .post-graphic-card.theme-slate .post-graphic-overlay {
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.88) 0%, rgba(30, 41, 59, 0.65) 45%, rgba(15, 23, 42, 0.95) 100%);
-    }
-    .post-graphic-card.theme-slate .post-did-you-know-badge {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-    .post-graphic-card.theme-slate .post-hook-title {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      color: #ffffff;
-    }
-    .post-graphic-card.theme-slate .post-subtitle {
-      font-family: var(--font-sans);
-      color: #f59e0b;
-      font-weight: 700;
-      font-size: 1.3rem;
-    }
-    .post-graphic-card.theme-slate .post-did-you-know-text {
-      color: #f1f5f9;
-    }
-    .post-graphic-card.theme-slate .post-fun-fact-ribbon {
-      background: #d97706;
-      color: #ffffff;
-    }
-    .post-graphic-card.theme-slate .post-fun-fact-card {
-      background: #1e293b;
-      color: #f8fafc;
-      border: 1.5px solid #334155;
-    }
-    .post-graphic-card.theme-slate .post-sticker-quote-bubble {
-      color: #fbbf24;
-    }
-    .post-graphic-card.theme-slate .wave-layer-1 {
-      fill: #d97706;
-      opacity: 0.85;
-    }
-    .post-graphic-card.theme-slate .wave-layer-2 {
-      fill: #475569;
-      opacity: 0.95;
-    }
-    .post-graphic-card.theme-slate .watermark-dot {
-      background: #fbbf24;
+    .post-graphic-card.layout-left .post-watermark {
+      bottom: 18px;
+      right: 22px;
     }
 
     /* Preview Actions */
@@ -2095,92 +1761,39 @@
                   <input type="checkbox" id="ai-bg-toggle" checked />
                   <span>AI Background</span>
                 </label>
-                <div class="theme-pills" role="radiogroup" aria-label="Card Themes">
-                  <button type="button" class="theme-pill active" data-theme="retro" title="Retro Pop (Summer Nights style)">🍧 Retro</button>
-                  <button type="button" class="theme-pill" data-theme="cosmic" title="Cosmic Nebula">🌌 Cosmic</button>
-                  <button type="button" class="theme-pill" data-theme="cyber" title="Cyber Neon">⚡ Neon</button>
-                  <button type="button" class="theme-pill" data-theme="nature" title="Emerald Nature">🌿 Nature</button>
-                  <button type="button" class="theme-pill" data-theme="slate" title="Sleek Modern">🖤 Sleek</button>
-                </div>
+                <label class="ai-bg-toggle-label" for="ai-title-in-image-toggle" title="Experimental: Tells Flux to write the title into the artwork. Spelling in the image may be imperfect.">
+                  <input type="checkbox" id="ai-title-in-image-toggle" />
+                  <span>AI Title in Image (exp)</span>
+                </label>
               </div>
             </div>
 
             <!-- The Renderable Card (1:1 Square Aspect Ratio) -->
             <div class="post-graphic-viewport">
-              <div id="post-graphic-card" class="post-graphic-card theme-retro">
-                <!-- Background Image layer with dynamic tint -->
+              <div id="post-graphic-card" class="post-graphic-card layout-bottom">
+                <!-- Full-bleed AI / Fallback Image -->
                 <div id="post-graphic-bg" class="post-graphic-bg"></div>
+                <!-- Soft gradient scrim from text side -->
                 <div class="post-graphic-overlay"></div>
+                <!-- Corner watermark -->
+                <div id="post-watermark" class="post-watermark">RandomFactsHub.com</div>
 
-                <!-- Card Content Layer -->
-                <div class="post-graphic-inner">
-                  
-                  <!-- Top Badge: Did You Know? -->
-                  <div class="post-top-row">
-                    <div class="post-did-you-know-badge">
-                      <span class="badge-bulb">💡</span>
-                      <span class="badge-text">Did You Know?</span>
-                    </div>
+                <!-- Minimal Content Layer -->
+                <div class="post-graphic-inner" id="post-graphic-inner">
+                  <div class="post-badge-row">
+                    <span id="post-did-you-know-badge" class="post-did-you-know-badge">Did You Know?</span>
                   </div>
 
-                  <!-- Catchy Main Title (e.g. Summer Nights by Grease) -->
-                  <div class="post-title-wrapper">
-                    <h3 id="post-graphic-hook-title" class="post-hook-title">Summer Nights</h3>
-                    <div id="post-graphic-subtitle" class="post-subtitle">by Grease</div>
+                  <div class="post-title-wrapper" id="post-title-wrapper">
+                    <h3 id="post-graphic-hook-title" class="post-hook-title"></h3>
+                    <div id="post-title-underline" class="post-title-underline"></div>
+                    <div id="post-graphic-subtitle" class="post-subtitle"></div>
                   </div>
 
-                  <!-- Primary Takeaway Point with Music / Topic Note -->
-                  <div class="post-did-you-know-box">
-                    <span id="post-topic-emoji" class="post-bullet-emoji">🎵</span>
-                    <p id="post-graphic-did-you-know-text" class="post-did-you-know-text">
-                      The iconic song "Summer Nights" from Grease was originally written for a Broadway musical, and later became a chart-topping hit after the movie's release in 1978.
-                    </p>
+                  <div class="post-fact-content">
+                    <p id="post-graphic-did-you-know-text" class="post-did-you-know-text"></p>
+                    <p id="post-graphic-fun-fact-text" class="post-fun-fact-line"></p>
                   </div>
-
-                  <!-- Fun Fact Highlight Callout -->
-                  <div class="post-fun-fact-container">
-                    <div class="post-fun-fact-ribbon">
-                      <span class="star-icon">★</span>
-                      <span>FUN FACT:</span>
-                    </div>
-                    <div class="post-fun-fact-card">
-                      <p id="post-graphic-fun-fact-text" class="post-fun-fact-text">
-                        The song was a huge success, and it perfectly captured the spirit of summer, love and young romance!
-                      </p>
-                    </div>
-                  </div>
-
-                  <!-- Themed Sticker Accent & Micro-Quote (like Vinyl Record & Good Music Never Gets Old) -->
-                  <div class="post-sticker-group" id="post-sticker-group">
-                    <div class="post-sticker-quote-bubble">
-                      <span id="post-sticker-quote-text">Good Music Never Gets Old 🎵</span>
-                    </div>
-                    <!-- Themed SVG Graphic (Vinyl record with rotating groove highlights) -->
-                    <div class="post-vinyl-sticker" id="post-vinyl-sticker">
-                      <svg class="vinyl-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="50" cy="50" r="48" fill="#18181b" stroke="#27272a" stroke-width="2"/>
-                        <circle cx="50" cy="50" r="42" stroke="#27272a" stroke-width="0.8" stroke-dasharray="3 3"/>
-                        <circle cx="50" cy="50" r="36" stroke="#3f3f46" stroke-width="0.8"/>
-                        <circle cx="50" cy="50" r="30" stroke="#27272a" stroke-width="0.8"/>
-                        <circle cx="50" cy="50" r="24" stroke="#3f3f46" stroke-width="0.8" stroke-dasharray="2 2"/>
-                        <circle cx="50" cy="50" r="18" fill="#ec4899" stroke="#f472b6" stroke-width="1.5"/>
-                        <circle cx="50" cy="50" r="4" fill="#fbbf24"/>
-                      </svg>
-                    </div>
-                  </div>
-
-                  <!-- Bottom Decorative Waves and Watermark -->
-                  <div class="post-bottom-waves" aria-hidden="true">
-                    <svg class="wave-svg" viewBox="0 0 500 80" preserveAspectRatio="none">
-                      <path d="M0,40 C150,85 350,10 500,50 L500,80 L0,80 Z" class="wave-layer-1"></path>
-                      <path d="M0,50 C180,20 320,80 500,35 L500,80 L0,80 Z" class="wave-layer-2"></path>
-                    </svg>
-                  </div>
-                  <div class="post-watermark">
-                    <span class="watermark-dot"></span>
-                    <span>RandomFactsHub.com</span>
-                  </div>
-
                 </div>
               </div>
             </div>
@@ -2463,12 +2076,15 @@
       const modalDoneBtn = document.getElementById('modal-done-btn');
       const postGraphicCard = document.getElementById('post-graphic-card');
       const postGraphicBg = document.getElementById('post-graphic-bg');
+      const postGraphicInner = document.getElementById('post-graphic-inner');
+      const postDidYouKnowBadge = document.getElementById('post-did-you-know-badge');
+      const postTitleWrapper = document.getElementById('post-title-wrapper');
       const postGraphicHookTitle = document.getElementById('post-graphic-hook-title');
+      const postTitleUnderline = document.getElementById('post-title-underline');
       const postGraphicSubtitle = document.getElementById('post-graphic-subtitle');
       const postGraphicDidYouKnowText = document.getElementById('post-graphic-did-you-know-text');
       const postGraphicFunFactText = document.getElementById('post-graphic-fun-fact-text');
-      const postStickerQuoteText = document.getElementById('post-sticker-quote-text');
-      const postTopicEmoji = document.getElementById('post-topic-emoji');
+      const postWatermark = document.getElementById('post-watermark');
       const postCaptionTextarea = document.getElementById('post-caption-textarea');
       const copyCaptionBtn = document.getElementById('copy-caption-btn');
       const copyCaptionText = document.getElementById('copy-caption-text');
@@ -2481,11 +2097,11 @@
       const regeneratePostBtn = document.getElementById('regenerate-post-btn');
       const regenerateText = document.getElementById('regenerate-text');
       const aiBgToggle = document.getElementById('ai-bg-toggle');
+      const aiTitleInImageToggle = document.getElementById('ai-title-in-image-toggle');
       const aiModalNotice = document.getElementById('ai-modal-notice');
       const aiStatusDot = document.getElementById('ai-status-dot');
       const aiStatusTitle = document.getElementById('ai-status-title');
       const aiStatusDesc = document.getElementById('ai-status-desc');
-      const themePills = document.querySelectorAll('.theme-pill');
 
       // AI Background toggle initialization (default ON, stored in rfh_ai_bg)
       if (aiBgToggle) {
@@ -2495,6 +2111,14 @@
           try {
             localStorage.setItem('rfh_ai_bg', aiBgToggle.checked ? 'true' : 'false');
           } catch (e) {}
+        });
+      }
+
+      if (aiTitleInImageToggle) {
+        aiTitleInImageToggle.addEventListener('change', () => {
+          if (currentPostData && currentFactData) {
+            renderPostCard(currentPostData, currentFactData);
+          }
         });
       }
 
@@ -2508,7 +2132,6 @@
       let isCurrentBgAi = false;
       let currentPostData = null;
       let currentPostBase64Img = null;
-      let currentPostTheme = localStorage.getItem('rfh_post_theme') || 'retro';
       let copyTimeoutId = null;
       let downloadTimeoutId = null;
 
@@ -3235,88 +2858,103 @@
       }
 
       // Update the AI Status Banner in the studio
-      function updateAiStatusBadge(succeeded = true) {
+      function updateAiStatusBadge(succeeded = true, errorReason = null) {
         if (!aiStatusDot || !aiStatusTitle || !aiStatusDesc) return;
         if (succeeded) {
           aiStatusDot.className = 'ai-status-dot pulse';
           aiStatusDot.style.background = '#10b981';
           aiStatusTitle.textContent = 'Cloudflare Workers AI (server)';
           aiStatusDesc.textContent = 'AI-generated viral card text & artwork via Llama 3.1 & Flux.';
+          if (aiModalNotice) aiModalNotice.hidden = true;
         } else {
           aiStatusDot.className = 'ai-status-dot';
           aiStatusDot.style.background = '#f59e0b';
-          aiStatusTitle.textContent = 'Smart template';
-          aiStatusDesc.textContent = 'AI unavailable, using smart template';
+          const shortReason = errorReason ? String(errorReason).slice(0, 45) : 'API unavailable';
+          aiStatusTitle.textContent = `AI text failed: ${shortReason}`;
+          aiStatusDesc.textContent = `AI generation failed (${shortReason}), using clean smart template.`;
+          showAiNotice(`AI text failed: ${shortReason}`);
         }
       }
 
-      // High-quality Client-side Smart AI Post Generator (Fallback & Instant Engine)
+      // Wikipedia text sanitization helper:
+      // Strips citations, parenthesized expressions (dates, foreign scripts, alt titles),
+      // and non-Latin unicode characters (Greek, Cyrillic, Arabic, Indic, CJK, etc.)
+      function cleanWikipediaText(text) {
+        if (!text || typeof text !== 'string') return '';
+        return text
+          // Remove citations like [1], [2], [note 1]
+          .replace(/\[[^\]]*\]/g, '')
+          // Remove all content within parentheses (Greek, Latin translations, birth dates, etc.)
+          .replace(/\([^)]*\)/g, '')
+          // Remove non-Latin script character blocks
+          .replace(/[\u0370-\u03FF\u1F00-\u1FFF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u4E00-\u9FFF\u3040-\u30FF\uAC00-\uD7AF]+/g, '')
+          // Clean punctuation and spacing artifacts
+          .replace(/\s*,\s*,+/g, ',')
+          .replace(/\s*;\s*;/g, ';')
+          .replace(/\s*,\s*([.;:?!])/g, '$1')
+          .replace(/^[,\s;:-]+/, '')
+          .replace(/\s+/g, ' ')
+          .replace(/\s+([,.;:?!])/g, '$1')
+          .trim();
+      }
+
+      function limitWords(str, maxWords) {
+        if (!str) return '';
+        const words = str.trim().split(/\s+/).filter(Boolean);
+        if (words.length <= maxWords) return str.trim();
+        let truncated = words.slice(0, maxWords).join(' ').trim();
+        if (!/[.?!]$/.test(truncated)) {
+          truncated = truncated.replace(/[,;:]$/, '') + '.';
+        }
+        return truncated;
+      }
+
+      // High-quality Client-side Smart AI Post Generator (Clean Fallback)
       function generateSmartPostFallback(factData, topicLabel) {
         const rawTitle = (factData.title || currentFactTitle || 'Did You Know').trim();
         const desc = (factData.description || '').trim();
-        const extract = (factData.extract || '').trim();
+        const rawExtract = (factData.extract || '').trim();
 
         // 1. Clean Title and Subtitle
-        let hookTitle = rawTitle;
-        let subtitle = '';
+        let hookTitle = cleanWikipediaText(rawTitle) || rawTitle;
+        hookTitle = limitWords(hookTitle.replace(/[.?!]$/, ''), 6);
 
-        // Check parentheses (e.g. "Summer Nights (Grease song)" -> "Summer Nights", "by Grease")
-        const parenMatch = rawTitle.match(/^(.*?)\s*\((.*?)\)$/);
-        if (parenMatch) {
-          hookTitle = parenMatch[1].trim();
-          const insideParen = parenMatch[2].trim().toLowerCase();
-          if (insideParen.includes('song') || insideParen.includes('film') || insideParen.includes('band') || insideParen.includes('novel')) {
-            const cleanSub = insideParen.replace(/song|film|movie|novel|band|album/g, '').trim();
-            subtitle = cleanSub ? `by ${cleanSub.charAt(0).toUpperCase() + cleanSub.slice(1)}` : `from ${insideParen}`;
-          } else {
-            subtitle = `(${parenMatch[2]})`;
-          }
-        } else if (desc) {
-          if (desc.toLowerCase().startsWith('song from') || desc.toLowerCase().startsWith('from the')) {
-            subtitle = desc.replace(/^song /i, '');
-          } else if (desc.length < 32) {
-            subtitle = desc;
+        let subtitle = '';
+        if (desc) {
+          const cleanDesc = cleanWikipediaText(desc);
+          if (cleanDesc && cleanDesc.toLowerCase() !== hookTitle.toLowerCase()) {
+            subtitle = limitWords(cleanDesc, 6);
           }
         }
 
-        // 2. Sentence extraction for Did You Know & Fun Fact
-        const sentences = extract.split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 15);
-        let didYouKnow = sentences[0] || extract;
-        didYouKnow = didYouKnow.replace(/\[\d+\]/g, '').trim();
+        // 2. Sentence extraction for Did You Know (first sentence, max 28 words)
+        const cleanedExtract = cleanWikipediaText(rawExtract);
+        const sentences = cleanedExtract.split(/(?<=[.?!])\s+/).map(s => s.trim()).filter(s => s.length > 10);
 
+        let didYouKnow = sentences[0] || cleanedExtract || `${hookTitle} holds an extraordinary place in history.`;
+        didYouKnow = limitWords(didYouKnow, 28);
+
+        // 3. Fun Fact: must be DIFFERENT info from didYouKnow, max 22 words
         let funFact = '';
         if (sentences.length > 1) {
-          const buzzwords = /success|hit|popular|million|billion|record|award|famous|unique|first|originally|became|highest|fastest|legendary|rare/i;
-          const matchedSentence = sentences.slice(1).find(s => buzzwords.test(s));
-          funFact = (matchedSentence || sentences[1]).replace(/\[\d+\]/g, '').trim();
-        } else {
-          funFact = `This fascinating piece of history continues to inspire curious minds around the globe!`;
+          const secondSentence = sentences.slice(1).find(s => s.toLowerCase() !== didYouKnow.toLowerCase() && s.length > 12);
+          if (secondSentence) {
+            funFact = limitWords(secondSentence, 22);
+          }
         }
-
-        // 3. Topic sticker & emoji
-        let topicEmoji = '💡';
-        let stickerQuote = 'Fascinating Fact ✨';
-        const tLower = (topicLabel || '').toLowerCase();
-        const titleLower = rawTitle.toLowerCase();
-
-        if (tLower.includes('space') || titleLower.includes('galaxy') || titleLower.includes('star') || titleLower.includes('planet')) {
-          topicEmoji = '🌌';
-          stickerQuote = 'Cosmic Wonders 🌌';
-        } else if (tLower.includes('science') || tLower.includes('physics') || titleLower.includes('quantum') || titleLower.includes('energy')) {
-          topicEmoji = '🔬';
-          stickerQuote = 'Pure Science Magic 🔬';
-        } else if (tLower.includes('animal') || titleLower.includes('species') || titleLower.includes('whale') || titleLower.includes('bear')) {
-          topicEmoji = '🐾';
-          stickerQuote = 'Wild & Wonderful Nature 🐾';
-        } else if (tLower.includes('history') || titleLower.includes('ancient') || titleLower.includes('war') || titleLower.includes('empire')) {
-          topicEmoji = '📜';
-          stickerQuote = 'Echoes of History 📜';
-        } else if (titleLower.includes('song') || titleLower.includes('music') || titleLower.includes('grease') || desc.toLowerCase().includes('song')) {
-          topicEmoji = '🎵';
-          stickerQuote = 'Good Music Never Gets Old 🎵';
-        } else {
-          topicEmoji = '✨';
-          stickerQuote = 'Knowledge Is Power 💡';
+        if (!funFact && desc) {
+          const cleanDesc = cleanWikipediaText(desc);
+          if (cleanDesc && !didYouKnow.toLowerCase().includes(cleanDesc.toLowerCase())) {
+            funFact = limitWords(cleanDesc, 22);
+          }
+        }
+        if (!funFact) {
+          const buzzwords = [
+            'Its fascinating historical legacy continues to inspire scholars and curious minds globally.',
+            'Discovered and documented through centuries of curious exploration and study.',
+            'An iconic subject that continues to shape our understanding of the world.'
+          ];
+          funFact = buzzwords[Math.floor(Math.random() * buzzwords.length)];
         }
 
         // 4. Hashtags
@@ -3327,37 +2965,46 @@
           cleanTopicTag ? `#${cleanTopicTag}` : '#InterestingFacts',
           '#DidYouKnow',
           '#RandomFacts',
-          '#FunFacts',
-          '#KnowledgeDrop'
+          '#Curiosity'
         ];
 
         // 5. Social Caption
-        const caption = `${topicEmoji} Did You Know?\n${hookTitle}${subtitle ? ' ' + subtitle : ''}\n\n${topicEmoji} ${didYouKnow}\n\n⭐ FUN FACT:\n${funFact}\n\n✨ Discover more unexpected daily facts at RandomFactsHub.com\n\n${hashtags.join(' ')}`;
+        const caption = `💡 Did You Know?\n${hookTitle}${subtitle ? ' - ' + subtitle : ''}\n\n${didYouKnow}\n\n★ FUN FACT:\n${funFact}\n\n✨ Explore more daily knowledge at RandomFactsHub.com\n\n${hashtags.join(' ')}`;
+
+        // Content-specific fallback image prompt (never "abstract background")
+        const imagePrompt = `${hookTitle}, ${desc || 'iconic cultural subject'}, cinematic atmospheric lighting, detailed setting, dramatic composition, artistic style, no text, no watermark`;
 
         return {
           hook_title: hookTitle,
           subtitle: subtitle,
           did_you_know: didYouKnow,
           fun_fact: funFact,
-          sticker_quote: stickerQuote,
-          topic_emoji: topicEmoji,
+          sticker_quote: 'Knowledge Is Power 💡',
           caption: caption,
           hashtags: hashtags,
+          image_prompt: imagePrompt,
+          accent_color: '#F4B942',
+          layout: 'bottom',
         };
       }
 
       // Call Cloudflare Workers AI via Vercel Serverless Function
-      async function fetchCloudflareWorkersAi(factData, topicLabel) {
+      async function fetchCloudflareWorkersAi(factData, topicLabel, forceRefresh = false) {
         try {
+          const payload = {
+            title: factData.title,
+            extract: factData.extract,
+            description: factData.description || '',
+            topic: topicLabel || '',
+          };
+          if (forceRefresh) {
+            payload.seed_phrase = `variation ${Math.floor(1000 + Math.random() * 9000)}`;
+          }
+
           const res = await fetch('/api/poster-text', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: factData.title,
-              extract: factData.extract,
-              description: factData.description || '',
-              topic: topicLabel || '',
-            }),
+            body: JSON.stringify(payload),
           });
 
           if (!res.ok) {
@@ -3367,13 +3014,13 @@
 
           const data = await res.json();
           if (data && data.data) {
-            return data.data;
+            return { success: true, data: data.data };
           }
           throw new Error('Invalid response structure from /api/poster-text');
         } catch (err) {
           console.error('fetchCloudflareWorkersAi error:', err);
-          showAiNotice('AI unavailable, using smart template');
-          return null;
+          const shortReason = err.message ? err.message.slice(0, 45) : 'Server error';
+          return { success: false, error: shortReason };
         }
       }
 
@@ -3381,10 +3028,53 @@
       function renderPostCard(postData, factData) {
         currentPostData = postData;
 
-        // Title and Subtitle
-        postGraphicHookTitle.textContent = postData.hook_title || factData.title;
-        if (postData.subtitle) {
-          postGraphicSubtitle.textContent = postData.subtitle;
+        // Apply Layout (bottom, top, left)
+        const layout = (postData.layout && ['bottom', 'top', 'left'].includes(postData.layout))
+          ? postData.layout
+          : 'bottom';
+        postGraphicCard.className = `post-graphic-card layout-${layout}`;
+
+        // Accent Color styling for Badge and Underline
+        const accent = (postData.accent_color && /^#[0-9a-fA-F]{6}$/.test(postData.accent_color))
+          ? postData.accent_color
+          : '#F4B942';
+        if (postDidYouKnowBadge) {
+          postDidYouKnowBadge.style.background = accent;
+        }
+        if (postTitleUnderline) {
+          postTitleUnderline.style.background = accent;
+        }
+
+        // Title and Subtitle handling (Hide HTML title if AI-written title in image was used)
+        const isAiTitleInImage = aiTitleInImageToggle && aiTitleInImageToggle.checked && isCurrentBgAi;
+        const titleText = (postData.hook_title || factData.title || '').trim();
+
+        if (isAiTitleInImage) {
+          postGraphicHookTitle.style.display = 'none';
+          if (postTitleUnderline) postTitleUnderline.style.display = 'none';
+        } else {
+          postGraphicHookTitle.style.display = 'block';
+          if (postTitleUnderline) postTitleUnderline.style.display = 'block';
+          postGraphicHookTitle.textContent = titleText;
+
+          // Responsive font-size scaling to guarantee no overflow in 1080x1080
+          if (titleText.length > 45) {
+            postGraphicHookTitle.style.fontSize = '1.35rem';
+            postGraphicHookTitle.style.lineHeight = '1.2';
+          } else if (titleText.length > 28) {
+            postGraphicHookTitle.style.fontSize = '1.65rem';
+            postGraphicHookTitle.style.lineHeight = '1.2';
+          } else if (titleText.length > 18) {
+            postGraphicHookTitle.style.fontSize = '1.9rem';
+            postGraphicHookTitle.style.lineHeight = '1.2';
+          } else {
+            postGraphicHookTitle.style.fontSize = '2.2rem';
+            postGraphicHookTitle.style.lineHeight = '1.15';
+          }
+        }
+
+        if (postData.subtitle && postData.subtitle.trim() && !isAiTitleInImage) {
+          postGraphicSubtitle.textContent = postData.subtitle.trim();
           postGraphicSubtitle.style.display = 'block';
         } else {
           postGraphicSubtitle.textContent = '';
@@ -3392,23 +3082,32 @@
         }
 
         // Did you know & Fun Fact
-        postGraphicDidYouKnowText.textContent = postData.did_you_know || factData.extract;
-        postGraphicFunFactText.textContent = postData.fun_fact || 'Learn something unexpected every single day!';
-
-        // Sticker Quote
-        if (postStickerQuoteText) {
-          postStickerQuoteText.textContent = postData.sticker_quote || 'Good Facts Never Get Old ✨';
+        const dykText = (postData.did_you_know || factData.extract || '').trim();
+        postGraphicDidYouKnowText.textContent = dykText;
+        if (dykText.length > 180) {
+          postGraphicDidYouKnowText.style.fontSize = '0.86rem';
+        } else if (dykText.length > 130) {
+          postGraphicDidYouKnowText.style.fontSize = '0.92rem';
+        } else {
+          postGraphicDidYouKnowText.style.fontSize = '0.98rem';
         }
 
-        // Topic Emoji
-        if (postTopicEmoji) {
-          postTopicEmoji.textContent = postData.topic_emoji || '🎵';
+        let funText = (postData.fun_fact || '').trim();
+        if (funText) {
+          if (!funText.startsWith('★')) {
+            funText = `★ ${funText}`;
+          }
+          postGraphicFunFactText.textContent = funText;
+          postGraphicFunFactText.style.display = 'block';
+        } else {
+          postGraphicFunFactText.textContent = '';
+          postGraphicFunFactText.style.display = 'none';
         }
 
-        // Background Image (0.85 opacity for AI background, 0.55 for Wikipedia)
+        // Background Image (Opacity 1 for both AI and fallback, gradient overlay provides readability)
         if (currentPostBase64Img) {
           postGraphicBg.style.backgroundImage = `url("${currentPostBase64Img}")`;
-          postGraphicBg.style.opacity = isCurrentBgAi ? '0.85' : '0.55';
+          postGraphicBg.style.opacity = '1';
         } else {
           postGraphicBg.style.backgroundImage = 'none';
           postGraphicBg.style.opacity = '0';
@@ -3419,7 +3118,7 @@
 
         // Hashtags Pills
         hashtagsContainer.innerHTML = '';
-        const tags = Array.isArray(postData.hashtags) ? postData.hashtags : ['#DidYouKnow', '#RandomFacts', '#FactsHub'];
+        const tags = Array.isArray(postData.hashtags) ? postData.hashtags : ['#DidYouKnow', '#RandomFacts', '#InterestingFacts'];
         tags.forEach(tag => {
           const pill = document.createElement('span');
           pill.className = 'hashtag-pill';
@@ -3428,56 +3127,82 @@
         });
       }
 
-      // Generate & Display Social Post
+      // Generate & Display Social Post (Sequential execution: text then image)
       async function generateAndDisplayPost(forceRefresh = false) {
         if (!currentFactData || isGeneratingPost) return;
 
         isGeneratingPost = true;
         createPostBtn.classList.add('is-loading');
         createPostBtn.disabled = true;
-        postBtnText.textContent = 'Generating...';
+        postBtnText.textContent = 'Writing post...';
         regeneratePostBtn.disabled = true;
-        regenerateText.textContent = 'Crafting with AI...';
+        regenerateText.textContent = 'Writing post...';
+        if (aiStatusDesc) aiStatusDesc.textContent = 'Writing post with Llama 3.1...';
 
         try {
-          // 1. Wikipedia image prefetch (fallback)
-          let wikiBase64 = currentPostBase64Img;
+          // Pre-fetch Wikipedia image as fallback in case AI image fails or is disabled
+          let wikiBase64 = null;
           const rawImageUrl = (currentFactData.thumbnail && currentFactData.thumbnail.source)
             || (currentFactData.originalimage && currentFactData.originalimage.source)
             || (factImg && factImg.src && factImg.src.startsWith('http') ? factImg.src : null);
 
-          if (rawImageUrl && (!wikiBase64 || forceRefresh)) {
+          if (rawImageUrl) {
             try {
               wikiBase64 = await fetchImageAsBase64(rawImageUrl);
             } catch (e) {
               console.warn('Could not fetch Wikipedia image as base64:', e);
-              wikiBase64 = null;
             }
           }
 
-          const isAiBgChecked = aiBgToggle ? aiBgToggle.checked : true;
+          // Step 1: Sequential Call #1 - Fetch /api/poster-text
+          const textResult = await fetchCloudflareWorkersAi(currentFactData, currentTopicLabel, forceRefresh);
+          let postData = null;
+          let textSucceeded = false;
+          let textErrorReason = null;
 
-          // 2. Prepare background call with 25s AbortController timeout
-          const bgPromise = (async () => {
-            if (!isAiBgChecked) {
-              return { img: wikiBase64, isAi: false };
-            }
+          if (textResult && textResult.success && textResult.data) {
+            postData = textResult.data;
+            textSucceeded = true;
+          } else {
+            textErrorReason = (textResult && textResult.error) ? textResult.error : 'Service unavailable';
+            console.error('AI text generation failed:', textErrorReason);
+            postData = generateSmartPostFallback(currentFactData, currentTopicLabel);
+            textSucceeded = false;
+          }
+
+          // Step 2: Sequential Call #2 - Fetch /api/poster-bg
+          postBtnText.textContent = 'Painting image...';
+          regenerateText.textContent = 'Painting image...';
+          if (aiStatusDesc) aiStatusDesc.textContent = 'Painting image with Flux Schnell...';
+
+          const isAiBgChecked = aiBgToggle ? aiBgToggle.checked : true;
+          let bgImage = null;
+          let isAiBg = false;
+
+          if (isAiBgChecked) {
             try {
               const controller = new AbortController();
-              const timeoutId = setTimeout(() => controller.abort(), 25000);
+              const timeoutId = setTimeout(() => controller.abort(), 28000);
 
-              const payload = {
+              const bgPayload = {
+                image_prompt: postData.image_prompt || '',
                 title: currentFactData.title || '',
                 description: currentFactData.description || '',
               };
+
               if (forceRefresh) {
-                payload.variation = Math.floor(Math.random() * 1000000);
+                bgPayload.variation = Math.floor(1000 + Math.random() * 9000);
+              }
+
+              if (aiTitleInImageToggle && aiTitleInImageToggle.checked) {
+                bgPayload.text_in_image = true;
+                bgPayload.hook_title = postData.hook_title || currentFactData.title || '';
               }
 
               const res = await fetch('/api/poster-bg', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload),
+                body: JSON.stringify(bgPayload),
                 signal: controller.signal,
               });
               clearTimeout(timeoutId);
@@ -3489,47 +3214,34 @@
 
               const json = await res.json();
               if (json && json.image) {
-                return { img: json.image, isAi: true };
+                bgImage = json.image;
+                isAiBg = true;
+              } else {
+                throw new Error('No image returned from /api/poster-bg');
               }
-              throw new Error('No image in /api/poster-bg response');
-            } catch (err) {
-              console.error('AI poster background generation error:', err);
-              // On any failure keep the Wikipedia image
-              return { img: wikiBase64, isAi: false };
+            } catch (bgErr) {
+              console.error('AI poster background generation error:', bgErr);
+              bgImage = wikiBase64;
+              isAiBg = false;
+              showAiNotice('AI image generation failed, using Wikipedia image');
             }
-          })();
+          } else {
+            bgImage = wikiBase64;
+            isAiBg = false;
+          }
 
-          // 3. Prepare text call
-          const textPromise = (async () => {
-            const aiData = await fetchCloudflareWorkersAi(currentFactData, currentTopicLabel);
-            const isAi = !!aiData;
-            let postData = aiData;
-            if (!postData) {
-              postData = generateSmartPostFallback(currentFactData, currentTopicLabel);
-            } else {
-              const fallback = generateSmartPostFallback(currentFactData, currentTopicLabel);
-              if (!postData.topic_emoji) postData.topic_emoji = fallback.topic_emoji;
-              if (!postData.subtitle && fallback.subtitle) postData.subtitle = fallback.subtitle;
-              if (!postData.sticker_quote) postData.sticker_quote = fallback.sticker_quote;
-            }
-            return { postData, isAi };
-          })();
+          currentPostBase64Img = bgImage;
+          isCurrentBgAi = isAiBg;
 
-          // Run both in parallel
-          const [bgResult, textResult] = await Promise.all([bgPromise, textPromise]);
-
-          currentPostBase64Img = bgResult.img || wikiBase64 || null;
-          isCurrentBgAi = bgResult.isAi;
-
-          renderPostCard(textResult.postData, currentFactData);
-          updateAiStatusBadge(textResult.isAi);
+          renderPostCard(postData, currentFactData);
+          updateAiStatusBadge(textSucceeded, textErrorReason);
 
         } catch (err) {
-          console.error('Failed to generate post:', err);
+          console.error('Unexpected error in generateAndDisplayPost:', err);
           const fallback = generateSmartPostFallback(currentFactData, currentTopicLabel);
           isCurrentBgAi = false;
           renderPostCard(fallback, currentFactData);
-          updateAiStatusBadge(false);
+          updateAiStatusBadge(false, err.message);
         } finally {
           isGeneratingPost = false;
           createPostBtn.classList.remove('is-loading');
@@ -3538,25 +3250,6 @@
           regeneratePostBtn.disabled = false;
           regenerateText.textContent = 'Regenerate Post';
         }
-      }
-
-      // Apply theme to the post card
-      function setPostTheme(themeName) {
-        currentPostTheme = themeName;
-        try {
-          localStorage.setItem('rfh_post_theme', themeName);
-        } catch (e) {}
-
-        themePills.forEach(pill => {
-          if (pill.dataset.theme === themeName) {
-            pill.classList.add('active');
-          } else {
-            pill.classList.remove('active');
-          }
-        });
-
-        // Remove previous theme classes
-        postGraphicCard.className = `post-graphic-card theme-${themeName}`;
       }
 
       // Download Post as 1080x1080 PNG Image
@@ -3716,7 +3409,6 @@
         if (!currentFactData) return;
         postModal.removeAttribute('hidden');
         document.body.style.overflow = 'hidden';
-        setPostTheme(currentPostTheme);
         generateAndDisplayPost(false);
       }
 
@@ -3753,13 +3445,6 @@
       if (copyCaptionBtn) copyCaptionBtn.addEventListener('click', handleCopyCaption);
       if (copyHashtagsBtn) copyHashtagsBtn.addEventListener('click', handleCopyHashtags);
       if (regeneratePostBtn) regeneratePostBtn.addEventListener('click', () => generateAndDisplayPost(true));
-
-      // Theme pills
-      themePills.forEach(pill => {
-        pill.addEventListener('click', () => {
-          setPostTheme(pill.dataset.theme);
-        });
-      });
 
 
       // Topic selector change: immediately load a random fact from that topic
@@ -3841,7 +3526,6 @@
       // Initialize on page load
       function init() {
         buildTopicDropdown();
-        setPostTheme(currentPostTheme);
         updateAiStatusBadge();
 
         const params = new URLSearchParams(window.location.search);

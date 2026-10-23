@@ -75,29 +75,43 @@ module.exports = async (req, res) => {
 
   try {
     const body = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    let { title, description, variation } = body;
+    let { image_prompt, title, description, variation, hook_title, text_in_image } = body;
 
-    if (typeof title !== 'string' || !title.trim()) {
-      return res.status(400).json({ error: 'title is required and must be a string' });
+    let basePrompt = '';
+
+    if (typeof image_prompt === 'string' && image_prompt.trim().length > 10) {
+      basePrompt = image_prompt.trim();
+    } else {
+      // Build a content-specific prompt from title+description (never "abstract background")
+      const cleanTitle = (typeof title === 'string' ? title.trim() : 'Fascinating Subject').slice(0, 200);
+      const cleanDesc = (typeof description === 'string' ? description.trim() : '').slice(0, 200);
+      basePrompt = `Striking visual depiction representing ${cleanTitle}${cleanDesc ? ': ' + cleanDesc : ''}, dramatic lighting, rich texture, cinematic atmosphere`;
     }
 
-    const cleanTitle = title.trim().slice(0, 200);
-    const cleanDesc = (typeof description === 'string' ? description.trim() : '').slice(0, 200);
+    // Strip trailing punctuation from basePrompt
+    basePrompt = basePrompt.replace(/[.,;]+$/, '');
 
-    let variationSuffix = '';
+    let finalPrompt = '';
+
+    // Experimental: AI-written title inside image
+    if (text_in_image && hook_title && typeof hook_title === 'string' && hook_title.trim()) {
+      const cleanHook = hook_title.trim().replace(/"/g, "'").slice(0, 60);
+      finalPrompt = `${basePrompt}, highly detailed, professional composition, sharp focus, no watermark, no logo. The poster title reads exactly "${cleanHook}" in large bold letters.`;
+    } else {
+      finalPrompt = `${basePrompt}, highly detailed, professional composition, sharp focus, no text, no letters, no watermark, no logo.`;
+    }
+
+    // Seed / variation phrase
     if (variation !== undefined && variation !== null) {
       const varStr = String(variation).replace(/[^a-zA-Z0-9#_-]/g, '').slice(0, 30);
       if (varStr) {
-        variationSuffix = ` (variation #${varStr})`;
+        finalPrompt += ` variation ${varStr}`;
       }
     }
 
-    const subject = cleanDesc ? `${cleanTitle} - ${cleanDesc}` : cleanTitle;
-    const prompt = `Cinematic abstract background artwork inspired by: ${subject}${variationSuffix}. Vibrant colors, soft depth of field, square composition, calm area in the center for text overlay. No text, no letters, no words, no watermark, no logos.`;
-
     const cfPayload = {
-      prompt,
-      steps: 4,
+      prompt: finalPrompt,
+      steps: 6,
     };
 
     if (typeof variation === 'number' && Number.isInteger(variation)) {
@@ -112,6 +126,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       image: `data:image/jpeg;base64,${result.image}`,
+      prompt: finalPrompt,
     });
   } catch (err) {
     const safeMessage = err.message ? err.message.replace(/([a-f0-9]{32,}|Bearer\s+[^\s]+)/gi, '[REDACTED]') : 'Background generation failed';
