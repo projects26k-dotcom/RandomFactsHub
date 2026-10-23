@@ -134,8 +134,11 @@ CRITICAL INSTRUCTIONS:
 - image_prompt: You are an art director. Write ONE detailed English prompt (60-90 words) for an image generator describing a single striking full-frame scene that visually represents this exact topic: concrete subject, setting, era, art style (choose what fits: cinematic photo, oil painting, vintage travel poster, watercolor, 3D render, Byzantine icon mosaic, retro synthwave, etc.), lighting, mood, color palette, composition. Do NOT depict a recognizable real person's face; show a symbolic or historical scene, silhouette, object or landscape instead. Keep it tasteful and non-graphic even for sad or violent topics. The image must contain NO text, NO letters, NO numbers, NO logos, NO watermark. Leave the {top|bottom|left} area visually a bit calmer/darker for text overlay.`;
 
 function parseLooseJson(text) {
+  if (text !== null && typeof text === 'object') {
+    return text;
+  }
   if (typeof text !== 'string') {
-    throw new Error('Input must be a string');
+    text = text === undefined || text === null ? '' : String(text);
   }
 
   // Strip markdown code fences
@@ -195,6 +198,98 @@ function parseLooseJson(text) {
   return JSON.parse(out);
 }
 
+function normalizeAiResponse(result, fallbackTitle = '', fallbackDesc = '') {
+  const r = result && result.response !== undefined ? result.response : result;
+  let data = null;
+
+  try {
+    if (r && typeof r === 'object') {
+      data = r;
+    } else if (typeof r === 'string') {
+      data = parseLooseJson(r);
+    } else if (r === undefined || r === null) {
+      data = {};
+    } else {
+      throw new Error('Unexpected AI response type: ' + typeof r);
+    }
+  } catch (err) {
+    const preview = typeof r === 'string'
+      ? r.slice(0, 200)
+      : JSON.stringify(r || '').slice(0, 200);
+    console.error(`AI response parsing failed. typeof: ${typeof r}, preview: ${preview}`, err);
+    throw err;
+  }
+
+  if (!data || typeof data !== 'object') {
+    throw new Error('Normalized AI output must be an object');
+  }
+
+  // Validate and fill defaults
+  const hook_title = (typeof data.hook_title === 'string' && data.hook_title.trim())
+    ? data.hook_title.trim()
+    : (fallbackTitle || 'Did You Know');
+
+  const subtitle = typeof data.subtitle === 'string' ? data.subtitle.trim() : '';
+
+  const did_you_know = (typeof data.did_you_know === 'string' && data.did_you_know.trim())
+    ? data.did_you_know.trim()
+    : `${hook_title} holds a remarkable place in world history and human knowledge.`;
+
+  const fun_fact = (typeof data.fun_fact === 'string' && data.fun_fact.trim())
+    ? data.fun_fact.trim()
+    : (subtitle || 'Discover something unexpected and fascinating every single day!');
+
+  const sticker_quote = (typeof data.sticker_quote === 'string' && data.sticker_quote.trim())
+    ? data.sticker_quote.trim()
+    : 'Knowledge Is Power 💡';
+
+  const caption = (typeof data.caption === 'string' && data.caption.trim())
+    ? data.caption.trim()
+    : `💡 Did You Know?\n${hook_title}${subtitle ? ' - ' + subtitle : ''}\n\n${did_you_know}\n\n★ FUN FACT:\n${fun_fact}\n\n✨ Discover more unexpected daily facts at RandomFactsHub.com`;
+
+  // Hashtags: if string, split into array; else ensure array
+  let hashtags = [];
+  if (Array.isArray(data.hashtags)) {
+    hashtags = data.hashtags.map(t => String(t).trim()).filter(Boolean);
+  } else if (typeof data.hashtags === 'string') {
+    hashtags = data.hashtags.split(/[\s,]+/).map(t => t.trim()).filter(Boolean);
+  }
+  if (!hashtags.length) {
+    hashtags = ['#DidYouKnow', '#RandomFacts', '#InterestingFacts'];
+  }
+  hashtags = hashtags.map(h => (h.startsWith('#') ? h : `#${h}`));
+
+  // Layout: bottom / top / left
+  const layout = (data.layout && ['bottom', 'top', 'left'].includes(data.layout))
+    ? data.layout
+    : 'bottom';
+
+  // Accent color: valid hex else #F4B942
+  const accent_color = (typeof data.accent_color === 'string' && /^#[0-9a-fA-F]{6}$/.test(data.accent_color))
+    ? data.accent_color
+    : '#F4B942';
+
+  // image_prompt: if missing, build content-specific prompt (never "abstract background")
+  let image_prompt = typeof data.image_prompt === 'string' ? data.image_prompt.trim() : '';
+  if (!image_prompt) {
+    const cleanContext = [hook_title, fallbackDesc].filter(Boolean).join(', ');
+    image_prompt = `A striking full-frame scene representing ${cleanContext || 'this historical subject'}, iconic setting, dramatic atmosphere, cinematic lighting, vivid colors, balanced composition, leave ${layout} area visually calmer for text overlay, no text, no watermark`;
+  }
+
+  return {
+    hook_title,
+    subtitle,
+    did_you_know,
+    fun_fact,
+    sticker_quote,
+    caption,
+    hashtags,
+    image_prompt,
+    accent_color,
+    layout,
+  };
+}
+
 async function requestLlama(userPrompt, useSchema = true) {
   const payload = {
     messages: [
@@ -212,28 +307,16 @@ async function requestLlama(userPrompt, useSchema = true) {
     };
   }
 
-  let result;
   try {
-    result = await runCf('@cf/meta/llama-3.1-8b-instruct', payload);
+    return await runCf('@cf/meta/llama-3.1-8b-instruct', payload);
   } catch (err) {
-    // If endpoint rejects response_format, retry once without it
+    // If endpoint rejects response_format or returns a 4xx error, retry once without it
     if (useSchema) {
-      console.warn('Llama rejected response_format, retrying without schema:', err.message);
+      console.warn('Llama with response_format rejected/failed, retrying without schema:', err.message);
       return requestLlama(userPrompt, false);
     }
     throw err;
   }
-
-  let rawText = '';
-  if (typeof result === 'string') {
-    rawText = result;
-  } else if (result && result.response) {
-    rawText = result.response;
-  } else {
-    rawText = JSON.stringify(result || '');
-  }
-
-  return rawText;
 }
 
 module.exports = async (req, res) => {
@@ -282,12 +365,12 @@ Fact Extract: ${cleanExtract}${variationPhrase ? `\nSeed phrase: ${variationPhra
     // Retry once if parsing or LLM fails
     for (let attempt = 1; attempt <= 2; attempt++) {
       try {
-        const rawText = await requestLlama(userPrompt, attempt === 1);
-        parsedData = parseLooseJson(rawText);
+        const rawResult = await requestLlama(userPrompt, attempt === 1);
+        parsedData = normalizeAiResponse(rawResult, cleanTitle, cleanDesc);
         if (parsedData && parsedData.hook_title && parsedData.did_you_know) {
           break;
         }
-        throw new Error('Parsed data missing required keys');
+        throw new Error('Normalized data missing required fields');
       } catch (err) {
         lastErr = err;
         console.warn(`Attempt ${attempt} to generate/parse post text failed:`, err.message);
@@ -296,17 +379,6 @@ Fact Extract: ${cleanExtract}${variationPhrase ? `\nSeed phrase: ${variationPhra
 
     if (!parsedData) {
       throw lastErr || new Error('Failed to parse AI output after retry');
-    }
-
-    // Sanitize / normalize outputs
-    if (!parsedData.layout || !['bottom', 'top', 'left'].includes(parsedData.layout)) {
-      parsedData.layout = 'bottom';
-    }
-    if (!parsedData.accent_color || !/^#[0-9a-fA-F]{6}$/.test(parsedData.accent_color)) {
-      parsedData.accent_color = '#F4B942';
-    }
-    if (!Array.isArray(parsedData.hashtags)) {
-      parsedData.hashtags = ['#DidYouKnow', '#RandomFacts', '#InterestingFacts'];
     }
 
     return res.status(200).json({
@@ -318,5 +390,6 @@ Fact Extract: ${cleanExtract}${variationPhrase ? `\nSeed phrase: ${variationPhra
   }
 };
 
-// Export parser for unit testing
+// Export helpers for unit testing
 module.exports.parseLooseJson = parseLooseJson;
+module.exports.normalizeAiResponse = normalizeAiResponse;

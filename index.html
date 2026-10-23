@@ -473,6 +473,7 @@
     }
 
     @media (prefers-color-scheme: dark) {
+
       .action-btn.copied,
       .copy-btn.copied,
       .action-btn.download-success {
@@ -927,6 +928,7 @@
         opacity: 0;
         transform: translateY(20px) scale(0.97);
       }
+
       to {
         opacity: 1;
         transform: translateY(0) scale(1);
@@ -1061,8 +1063,49 @@
       background-position: center;
       background-repeat: no-repeat;
       z-index: 0;
-      opacity: 1;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    /* Card Loading Overlay for Smooth Transitions */
+    .post-card-loader {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: rgba(9, 13, 22, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      opacity: 0;
+      pointer-events: none;
       transition: opacity 0.3s ease;
+    }
+
+    .post-card-loader.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .post-card-loader .loader-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3.5px solid rgba(255, 255, 255, 0.15);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .post-card-loader .loader-text {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: 0.02em;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
     }
 
     .post-graphic-overlay {
@@ -1318,9 +1361,12 @@
     }
 
     @keyframes statusPulse {
-      0%, 100% {
+
+      0%,
+      100% {
         box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
       }
+
       50% {
         box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
       }
@@ -1578,6 +1624,7 @@
         grid-template-columns: 1fr;
         max-height: calc(88vh - 70px);
       }
+
       .post-preview-column {
         max-width: 480px;
         margin: 0 auto;
@@ -1661,15 +1708,21 @@
           <div class="card-topbar">
             <span id="fact-tag" class="fact-tag">Wikipedia Fact</span>
             <div class="card-actions">
-              <button id="copy-btn" class="action-btn copy-btn" type="button" aria-label="Copy link to this fact" title="Copy link to this fact">
-                <svg class="action-icon copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <button id="copy-btn" class="action-btn copy-btn" type="button" aria-label="Copy link to this fact"
+                title="Copy link to this fact">
+                <svg class="action-icon copy-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  aria-hidden="true">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
                 <span id="copy-text">Copy link</span>
               </button>
-              <button id="download-pdf-btn" class="action-btn download-btn" type="button" aria-label="Download fact in PDF with image" title="Download fact in PDF with image">
-                <svg class="action-icon download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <button id="download-pdf-btn" class="action-btn download-btn" type="button"
+                aria-label="Download fact in PDF with image" title="Download fact in PDF with image">
+                <svg class="action-icon download-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  aria-hidden="true">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                   <polyline points="7 10 12 15 17 10"></polyline>
                   <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -1677,9 +1730,14 @@
                 <span class="action-spinner" aria-hidden="true"></span>
                 <span id="download-text">Download PDF</span>
               </button>
-              <button id="create-post-btn" class="action-btn post-btn" type="button" aria-label="Create AI Poster" title="Create AI Poster with Cloudflare Workers AI">
-                <svg class="action-icon post-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M12 2v4m0 12v4M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"></path>
+              <button id="create-post-btn" class="action-btn post-btn" type="button" aria-label="Create AI Poster"
+                title="Create AI Poster with Cloudflare Workers AI">
+                <svg class="action-icon post-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  aria-hidden="true">
+                  <path
+                    d="M12 2v4m0 12v4M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83">
+                  </path>
                 </svg>
                 <span class="action-spinner" aria-hidden="true"></span>
                 <span id="post-btn-text">Create Poster</span>
@@ -1734,34 +1792,43 @@
     <div id="post-modal" class="post-modal" role="dialog" aria-modal="true" aria-labelledby="post-modal-title" hidden>
       <div class="post-modal-backdrop" id="post-modal-backdrop"></div>
       <div class="post-modal-container">
-        
+
         <!-- Modal Topbar -->
         <div class="post-modal-header">
           <div class="modal-header-info">
             <div class="modal-badge">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4m0 12v4M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path
+                  d="M12 2v4m0 12v4M2 12h4m12 0h4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+              </svg>
               <span>Cloudflare Workers AI Studio</span>
             </div>
             <h2 id="post-modal-title" class="post-modal-title">Create Social Media Post</h2>
           </div>
           <button id="post-modal-close-btn" class="modal-close-btn" type="button" aria-label="Close dialog">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
           </button>
         </div>
 
         <!-- Modal Body (Two columns: Preview on Left, Settings & Caption on Right) -->
         <div class="post-modal-body">
-          
+
           <!-- Column 1: Live 1080x1080 Square Graphic Card Preview -->
           <div class="post-preview-column">
             <div class="preview-header">
               <span class="preview-label">Visual Card (1:1 Square Post)</span>
               <div class="preview-controls">
-                <label class="ai-bg-toggle-label" for="ai-bg-toggle" title="Generate AI Background Art with Flux Schnell">
+                <label class="ai-bg-toggle-label" for="ai-bg-toggle"
+                  title="Generate AI Background Art with Flux Schnell">
                   <input type="checkbox" id="ai-bg-toggle" checked />
                   <span>AI Background</span>
                 </label>
-                <label class="ai-bg-toggle-label" for="ai-title-in-image-toggle" title="Experimental: Tells Flux to write the title into the artwork. Spelling in the image may be imperfect.">
+                <label class="ai-bg-toggle-label" for="ai-title-in-image-toggle"
+                  title="Experimental: Tells Flux to write the title into the artwork. Spelling in the image may be imperfect.">
                   <input type="checkbox" id="ai-title-in-image-toggle" />
                   <span>AI Title in Image (exp)</span>
                 </label>
@@ -1795,17 +1862,32 @@
                     <p id="post-graphic-fun-fact-text" class="post-fun-fact-line"></p>
                   </div>
                 </div>
+
+                <!-- Card Loading Overlay for Smooth Transitions -->
+                <div id="post-card-loader" class="post-card-loader" aria-live="polite">
+                  <div class="loader-spinner"></div>
+                  <div id="post-loader-text" class="loader-text">Writing post...</div>
+                </div>
               </div>
             </div>
 
             <!-- Image Download / Clipboard Action Bar -->
             <div class="preview-actions">
               <button id="post-download-img-btn" class="primary-action-btn" type="button">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
                 <span id="post-download-img-text">Download Post (PNG)</span>
               </button>
               <button id="post-copy-img-btn" class="secondary-action-btn" type="button" title="Copy image to clipboard">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
                 <span id="post-copy-img-text">Copy Image</span>
               </button>
             </div>
@@ -1813,14 +1895,15 @@
 
           <!-- Column 2: Caption, Hashtags & AI Engine Settings -->
           <div class="post-details-column">
-            
+
             <!-- AI Engine Status Banner -->
             <div class="ai-status-card" id="ai-status-card">
               <div class="ai-status-content">
                 <div class="ai-status-dot pulse" id="ai-status-dot"></div>
                 <div class="ai-status-texts">
                   <div class="ai-status-title" id="ai-status-title">Cloudflare Workers AI (server)</div>
-                  <div class="ai-status-desc" id="ai-status-desc">Generates formatted viral cards with Llama 3.1 & Flux Schnell.</div>
+                  <div class="ai-status-desc" id="ai-status-desc">Generates formatted viral cards with Llama 3.1 & Flux
+                    Schnell.</div>
                 </div>
               </div>
             </div>
@@ -1831,7 +1914,10 @@
               <div class="caption-card-header">
                 <span class="caption-label">Social Media Caption</span>
                 <button id="copy-caption-btn" class="copy-caption-btn" type="button">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
                   <span id="copy-caption-text">Copy Caption</span>
                 </button>
               </div>
@@ -1850,7 +1936,9 @@
             <!-- Modal Action Footer: Regenerate & Close -->
             <div class="modal-footer-controls">
               <button id="regenerate-post-btn" class="regenerate-btn" type="button">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67" />
+                </svg>
                 <span id="regenerate-text">Regenerate Post</span>
               </button>
               <button id="modal-done-btn" class="done-btn" type="button">Done</button>
@@ -2102,6 +2190,8 @@
       const aiStatusDot = document.getElementById('ai-status-dot');
       const aiStatusTitle = document.getElementById('ai-status-title');
       const aiStatusDesc = document.getElementById('ai-status-desc');
+      const postCardLoader = document.getElementById('post-card-loader');
+      const postLoaderText = document.getElementById('post-loader-text');
 
       // AI Background toggle initialization (default ON, stored in rfh_ai_bg)
       if (aiBgToggle) {
@@ -2110,7 +2200,7 @@
         aiBgToggle.addEventListener('change', () => {
           try {
             localStorage.setItem('rfh_ai_bg', aiBgToggle.checked ? 'true' : 'false');
-          } catch (e) {}
+          } catch (e) { }
         });
       }
 
@@ -2132,6 +2222,7 @@
       let isCurrentBgAi = false;
       let currentPostData = null;
       let currentPostBase64Img = null;
+      let postRequestId = 0;
       let copyTimeoutId = null;
       let downloadTimeoutId = null;
 
@@ -3127,16 +3218,74 @@
         });
       }
 
+      // Clear all visual card layers, text, and cached background
+      function clearPostCard() {
+        currentPostBase64Img = null;
+        currentPostData = null;
+        isCurrentBgAi = false;
+        if (postGraphicBg) {
+          postGraphicBg.style.backgroundImage = 'none';
+          postGraphicBg.style.opacity = '0';
+        }
+        if (postGraphicHookTitle) {
+          postGraphicHookTitle.textContent = '';
+          postGraphicHookTitle.style.display = 'block';
+        }
+        if (postTitleUnderline) {
+          postTitleUnderline.style.display = 'none';
+        }
+        if (postGraphicSubtitle) {
+          postGraphicSubtitle.textContent = '';
+          postGraphicSubtitle.style.display = 'none';
+        }
+        if (postGraphicDidYouKnowText) {
+          postGraphicDidYouKnowText.textContent = '';
+        }
+        if (postGraphicFunFactText) {
+          postGraphicFunFactText.textContent = '';
+          postGraphicFunFactText.style.display = 'none';
+        }
+        if (postCaptionTextarea) {
+          postCaptionTextarea.value = '';
+        }
+        if (hashtagsContainer) {
+          hashtagsContainer.innerHTML = '';
+        }
+      }
+
+      function showCardLoader(text = 'Writing post...') {
+        if (postCardLoader) postCardLoader.classList.add('active');
+        if (postLoaderText) postLoaderText.textContent = text;
+      }
+
+      function hideCardLoader() {
+        if (postCardLoader) postCardLoader.classList.remove('active');
+      }
+
       // Generate & Display Social Post (Sequential execution: text then image)
       async function generateAndDisplayPost(forceRefresh = false) {
-        if (!currentFactData || isGeneratingPost) return;
+        if (!currentFactData) return;
 
+        const myId = ++postRequestId;
         isGeneratingPost = true;
-        createPostBtn.classList.add('is-loading');
-        createPostBtn.disabled = true;
-        postBtnText.textContent = 'Writing post...';
-        regeneratePostBtn.disabled = true;
-        regenerateText.textContent = 'Writing post...';
+
+        // Immediately clear the card: remove old image & text
+        clearPostCard();
+
+        // Show loading overlay on the card
+        showCardLoader('Writing post...');
+
+        // Disable Action & Export Buttons while generating
+        if (createPostBtn) {
+          createPostBtn.classList.add('is-loading');
+          createPostBtn.disabled = true;
+        }
+        if (postBtnText) postBtnText.textContent = 'Writing post...';
+        if (regeneratePostBtn) regeneratePostBtn.disabled = true;
+        if (regenerateText) regenerateText.textContent = 'Writing post...';
+        if (postDownloadImgBtn) postDownloadImgBtn.disabled = true;
+        if (postCopyImgBtn) postCopyImgBtn.disabled = true;
+
         if (aiStatusDesc) aiStatusDesc.textContent = 'Writing post with Llama 3.1...';
 
         try {
@@ -3154,8 +3303,12 @@
             }
           }
 
+          if (myId !== postRequestId) return;
+
           // Step 1: Sequential Call #1 - Fetch /api/poster-text
           const textResult = await fetchCloudflareWorkersAi(currentFactData, currentTopicLabel, forceRefresh);
+          if (myId !== postRequestId) return;
+
           let postData = null;
           let textSucceeded = false;
           let textErrorReason = null;
@@ -3171,8 +3324,9 @@
           }
 
           // Step 2: Sequential Call #2 - Fetch /api/poster-bg
-          postBtnText.textContent = 'Painting image...';
-          regenerateText.textContent = 'Painting image...';
+          if (postBtnText) postBtnText.textContent = 'Painting image...';
+          if (regenerateText) regenerateText.textContent = 'Painting image...';
+          showCardLoader('Painting image...');
           if (aiStatusDesc) aiStatusDesc.textContent = 'Painting image with Flux Schnell...';
 
           const isAiBgChecked = aiBgToggle ? aiBgToggle.checked : true;
@@ -3230,25 +3384,59 @@
             isAiBg = false;
           }
 
+          if (myId !== postRequestId) return;
+
+          // Preload image before applying to card so it displays cleanly without flicker
+          if (bgImage) {
+            try {
+              const img = new Image();
+              img.src = bgImage;
+              if (img.decode) {
+                await img.decode();
+              } else {
+                await new Promise((resolve) => {
+                  img.onload = resolve;
+                  img.onerror = resolve;
+                });
+              }
+            } catch (decodeErr) {
+              console.warn('Image pre-decode warning:', decodeErr);
+            }
+          }
+
+          if (myId !== postRequestId) return;
+
           currentPostBase64Img = bgImage;
           isCurrentBgAi = isAiBg;
 
           renderPostCard(postData, currentFactData);
           updateAiStatusBadge(textSucceeded, textErrorReason);
 
+          // Hide loading overlay after image & layout are ready
+          hideCardLoader();
+
         } catch (err) {
+          if (myId !== postRequestId) return;
           console.error('Unexpected error in generateAndDisplayPost:', err);
           const fallback = generateSmartPostFallback(currentFactData, currentTopicLabel);
           isCurrentBgAi = false;
           renderPostCard(fallback, currentFactData);
           updateAiStatusBadge(false, err.message);
+          hideCardLoader();
         } finally {
-          isGeneratingPost = false;
-          createPostBtn.classList.remove('is-loading');
-          createPostBtn.disabled = false;
-          postBtnText.textContent = 'Create Poster';
-          regeneratePostBtn.disabled = false;
-          regenerateText.textContent = 'Regenerate Post';
+          if (myId === postRequestId) {
+            isGeneratingPost = false;
+            if (createPostBtn) {
+              createPostBtn.classList.remove('is-loading');
+              createPostBtn.disabled = false;
+            }
+            if (postBtnText) postBtnText.textContent = 'Create Poster';
+            if (regeneratePostBtn) regeneratePostBtn.disabled = false;
+            if (regenerateText) regenerateText.textContent = 'Regenerate Post';
+            if (postDownloadImgBtn) postDownloadImgBtn.disabled = false;
+            if (postCopyImgBtn) postCopyImgBtn.disabled = false;
+            hideCardLoader();
+          }
         }
       }
 
@@ -3396,7 +3584,7 @@
         if (!tags) return;
 
         if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(tags).catch(() => {});
+          await navigator.clipboard.writeText(tags).catch(() => { });
         }
         copyHashtagsBtn.textContent = 'Copied!';
         setTimeout(() => {
@@ -3407,6 +3595,7 @@
       // Open Post Studio Modal
       function openPostModal() {
         if (!currentFactData) return;
+        clearPostCard();
         postModal.removeAttribute('hidden');
         document.body.style.overflow = 'hidden';
         generateAndDisplayPost(false);
@@ -3416,6 +3605,9 @@
       function closePostModal() {
         postModal.setAttribute('hidden', '');
         document.body.style.overflow = '';
+        clearPostCard();
+        hideCardLoader();
+        postRequestId++;
       }
 
       // Event Listeners
